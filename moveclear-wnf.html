@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WNF Manager — Move Clear</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #09090E;
+      --bg-card:      #0F0F16;
+      --bg-card-hover:#141420;
+      --text:         #EEEEF0;
+      --text-muted:   rgba(238,238,240,0.45);
+      --text-dim:     rgba(238,238,240,0.18);
+      --blue:         #5AC8FA;
+      --border:       rgba(238,238,240,0.07);
+      --border-hover: rgba(238,238,240,0.14);
+      --radius:       14px;
+      --radius-lg:    20px;
+      --accent:       #5AC8FA;
+      --accent-rgb:   90,200,250;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Instrument Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      transition: background 0.4s ease, border-color 0.4s ease;
+      border-bottom: 1px solid transparent;
+    }
+    nav.scrolled {
+      background: rgba(9,9,14,0.85);
+      border-color: var(--border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      transition: color 0.2s, opacity 0.2s;
+    }
+    .nav-back:hover { color: var(--text); opacity: 0.8; }
+    .nav-back svg { width: 14px; height: 14px; }
+    .nav-mc-logo { height: 22px; width: auto; display: block; }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: 40px;
+      border: 1px solid rgba(var(--accent-rgb), 0.35);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .nav-cta:hover {
+      background: rgba(var(--accent-rgb), 0.08);
+      border-color: rgba(var(--accent-rgb), 0.6);
+    }
+    .nav-cta svg { width: 12px; height: 12px; }
+
+    .case-hero {
+      padding: 140px 24px 100px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .hero-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .tag {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 40px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .tag.accent {
+      color: var(--accent);
+      border-color: rgba(var(--accent-rgb), 0.3);
+      background: rgba(var(--accent-rgb), 0.06);
+    }
+    .hero-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(56px, 10vw, 112px);
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.1s forwards;
+    }
+    .hero-name span { color: var(--accent); }
+    .hero-subtitle {
+      margin-top: 20px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(18px, 2.8vw, 28px);
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.25s forwards;
+    }
+    .hero-intro {
+      margin-top: 28px;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      max-width: 620px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.4s forwards;
+    }
+    .hero-divider {
+      margin-top: 64px;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0.25;
+    }
+
+    .hero-image {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .hero-image img {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    .content-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+    }
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+    .section-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 48px;
+    }
+
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .challenge-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .challenge-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0.4;
+    }
+    .challenge-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: rgba(var(--accent-rgb), 0.1);
+      line-height: 1;
+      margin-bottom: 16px;
+      letter-spacing: -0.04em;
+    }
+    .challenge-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .challenge-desc {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-muted);
+    }
+
+    .approach-list { display: flex; flex-direction: column; }
+    .approach-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .approach-item:first-child { border-top: 1px solid var(--border); }
+    .approach-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--text-dim);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+    .approach-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .approach-desc {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text-muted);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: 2px solid rgba(var(--accent-rgb), 0.5);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .feature-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .feature-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .next-steps { display: flex; flex-direction: column; }
+    .next-step {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .next-step:first-child { border-top: 1px solid var(--border); }
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 7px; flex-shrink: 0;
+    }
+    .step-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+    .step-desc { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+
+    .section-divider {
+      width: 100%; height: 1px;
+      background: var(--border);
+      max-width: 900px;
+      margin: 0 auto 100px;
+    }
+
+    .case-cta {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 140px;
+      text-align: center;
+    }
+    .cta-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .cta-sub { font-size: 16px; color: var(--text-muted); margin-bottom: 40px; }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 40px;
+      background: var(--accent);
+      color: #09090E;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+      letter-spacing: -0.01em;
+    }
+    .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .cta-btn svg { width: 16px; height: 16px; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-left {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 15px; font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+    .footer-left .c { color: var(--blue); }
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .footer-dhd {
+      height: 22px;
+      width: auto;
+      opacity: 0.28;
+      transition: opacity 0.2s;
+    }
+    .footer-dhd:hover { opacity: 0.6; }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; }
+      .challenge-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .approach-item { grid-template-columns: 56px 1fr; }
+      .approach-num { font-size: 44px; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-back">
+      <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13 7H1M7 13l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <img src="moveclear_logo.png" alt="Move Clear" class="nav-mc-logo">
+    </a>
+    <a href="https://d4vidholly.github.io/WNF-Manager//" target="_blank" rel="noopener" class="nav-cta">
+      Try WNF Manager
+      <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </nav>
+
+  <section class="case-hero">
+    <div class="hero-tags">
+      <span class="tag accent">Football</span>
+      <span class="tag">Grassroots</span>
+      <span class="tag">Team Builder</span>
+      <span class="tag">Wednesday Night Football</span>
+    </div>
+    <h1 class="hero-name">WNF <span>Manager</span></h1>
+    <p class="hero-subtitle">Fair teams. Clear picks. No arguments.</p>
+    <p class="hero-intro">Wednesday night football is chaotic. Too many players, too many opinions, not enough time. WNF Manager takes a pool of players — with positions and ratings — and builds balanced, fair teams automatically. The organiser gets clarity. The group gets a game they trust. Everyone plays.</p>
+    <div class="hero-divider"></div>
+  </section>
+
+  <div class="hero-image">
+    <img src="https://d4vidholly.github.io/Segflow/assets/wnf-manager-hero.png" alt="WNF Manager interface" loading="lazy">
+  </div>
+
+  <section class="content-section">
+    <p class="section-eyebrow reveal">The challenge</p>
+    <h2 class="section-heading reveal">What wasn't working.</h2>
+    <div class="challenge-grid">
+      <div class="challenge-card reveal reveal-delay-1">
+        <p class="challenge-num">01</p>
+        <p class="challenge-title">The organiser burden</p>
+        <p class="challenge-desc">Someone always ends up managing the WhatsApp group, tracking who's in, manually picking teams in their head. It's thankless, it's slow, and it's always the same person.</p>
+      </div>
+      <div class="challenge-card reveal reveal-delay-2">
+        <p class="challenge-num">02</p>
+        <p class="challenge-title">Teams never feel fair</p>
+        <p class="challenge-desc">Random picks, blind randomisers, and the captain-pick system all produce lopsided games. A 6-1 feels bad for everyone. The group loses trust in the process before the match even starts.</p>
+      </div>
+      <div class="challenge-card reveal reveal-delay-3">
+        <p class="challenge-num">03</p>
+        <p class="challenge-title">No position awareness</p>
+        <p class="challenge-desc">Existing team-picker apps treat all players as equal. Putting three goalkeepers on one side and none on the other is technically "balanced." It needed to understand positions.</p>
+      </div>
+      <div class="challenge-card reveal reveal-delay-4">
+        <p class="challenge-num">04</p>
+        <p class="challenge-title">Different numbers each week</p>
+        <p class="challenge-desc">Ten this week. Fourteen next. A late drop-out at 6pm. Any tool that couldn't handle fluid player pools in real time wasn't going to survive contact with an actual Wednesday night.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <p class="section-eyebrow reveal">The approach</p>
+    <h2 class="section-heading reveal">How we built it.</h2>
+    <div class="approach-list">
+      <div class="approach-item reveal">
+        <p class="approach-num">1</p>
+        <div>
+          <p class="approach-title">Rating + position model</p>
+          <p class="approach-desc">Each player in the pool has a skill rating and a preferred position. The algorithm balances teams across both dimensions simultaneously — not just total ability, but positional distribution too.</p>
+        </div>
+      </div>
+      <div class="approach-item reveal reveal-delay-1">
+        <p class="approach-num">2</p>
+        <div>
+          <p class="approach-title">Fluid player pool</p>
+          <p class="approach-desc">Players can be added or removed from the pool right up to kick-off. The tool regenerates balanced teams from whatever the final confirmed list is — late drop-outs don't break the system.</p>
+        </div>
+      </div>
+      <div class="approach-item reveal reveal-delay-2">
+        <p class="approach-num">3</p>
+        <div>
+          <p class="approach-title">Formation view</p>
+          <p class="approach-desc">Generated teams are displayed in a tactical formation layout — not just a list of names. The organiser can see whether the teams make sense as a shape, not just as a set of numbers.</p>
+        </div>
+      </div>
+      <div class="approach-item reveal reveal-delay-3">
+        <p class="approach-num">4</p>
+        <div>
+          <p class="approach-title">No accounts needed</p>
+          <p class="approach-desc">Like all Move Clear products, WNF Manager is built for the moment. Open it on your phone in the car park, build your teams, show the group. Done. No signup, no setup, no friction.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <p class="section-eyebrow reveal">What's in it</p>
+    <h2 class="section-heading reveal">Key features.</h2>
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1">
+        <p class="feature-title">Rating-based team balance</p>
+        <p class="feature-desc">Algorithm distributes players across teams to equalise total skill ratings — minimising the gap between the sides before a ball is kicked.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <p class="feature-title">Position-aware distribution</p>
+        <p class="feature-desc">Positions are factored into team building — ensuring each side has a natural shape rather than three strikers and no cover at the back.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <p class="feature-title">Formation view</p>
+        <p class="feature-desc">See each team laid out in their tactical formation, not just a list. Spot imbalances at a glance and regenerate if needed before stepping out.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-4">
+        <p class="feature-title">Saved player pool</p>
+        <p class="feature-desc">Your regular players are remembered — add this week's confirmed names, remove drop-outs, and generate teams from your actual lineup in seconds.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="content-section">
+    <p class="section-eyebrow reveal">What's next</p>
+    <h2 class="section-heading reveal">On the roadmap.</h2>
+    <div class="next-steps">
+      <div class="next-step reveal reveal-delay-1">
+        <div class="step-dot"></div>
+        <div>
+          <p class="step-title">Result tracking</p>
+          <p class="step-desc">Record scores after each game — building a history of results that feeds back into player ratings over time, based on actual game outcomes.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-2">
+        <div class="step-dot"></div>
+        <div>
+          <p class="step-title">Player performance data</p>
+          <p class="step-desc">Goal and assist tracking per player — a running record that creates real data-driven ratings rather than manually assigned ones.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-3">
+        <div class="step-dot"></div>
+        <div>
+          <p class="step-title">Group sharing</p>
+          <p class="step-desc">Generate a shareable link to the week's teams — so the organiser can send the lineup to the group WhatsApp without screenshots or retyping.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-4">
+        <div class="step-dot"></div>
+        <div>
+          <p class="step-title">Season-end report</p>
+          <p class="step-desc">An end-of-season summary for the regular game: top scorer, most appearances, form table — data that makes the grassroots game feel like it counts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="case-cta">
+    <h2 class="cta-heading reveal">Make the call with clarity.</h2>
+    <p class="cta-sub reveal reveal-delay-1">Build fair, balanced teams from your player pool. No arguments. Just football.</p>
+    <a href="https://d4vidholly.github.io/WNF-Manager//" target="_blank" rel="noopener" class="cta-btn reveal reveal-delay-2">
+      Open WNF Manager
+      <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </section>
+
+  <footer>
+    <span class="footer-left">Move<span class="c">Clear</span></span>
+    <span class="footer-right">
+      <span>&copy; 2026 Move Clear Labs</span>
+      <a href="https://d4vidholly.github.io/" target="_blank" rel="noopener"><img src="DHD_logo.png" alt="DHD" class="footer-dhd"></a>
+    </span>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

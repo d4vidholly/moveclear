@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boro Predictor — Move Clear</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #09090E;
+      --bg-card:      #0F0F16;
+      --text:         #EEEEF0;
+      --text-muted:   rgba(238,238,240,0.45);
+      --text-dim:     rgba(238,238,240,0.18);
+      --blue:         #5AC8FA;
+      --border:       rgba(238,238,240,0.07);
+      --radius:       14px;
+      --radius-lg:    20px;
+      --accent:       #FF453A;
+      --accent-rgb:   255,69,58;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Instrument Sans', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; transition: background 0.4s ease, border-color 0.4s ease; border-bottom: 1px solid transparent; }
+    nav.scrolled { background: rgba(9,9,14,0.85); border-color: var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .nav-back { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-muted); font-size: 13px; transition: color 0.2s, opacity 0.2s; }
+    .nav-back:hover { color: var(--text); opacity: 0.8; }
+    .nav-back svg { width: 14px; height: 14px; }
+    .nav-mc-logo { height: 22px; width: auto; display: block; }
+    .nav-cta { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 40px; border: 1px solid rgba(var(--accent-rgb), 0.35); color: var(--accent); font-size: 12px; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+    .nav-cta:hover { background: rgba(var(--accent-rgb), 0.08); border-color: rgba(var(--accent-rgb), 0.6); }
+    .nav-cta svg { width: 12px; height: 12px; }
+
+    .case-hero { padding: 140px 24px 80px; max-width: 900px; margin: 0 auto; }
+    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+    .tag { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 12px; border-radius: 40px; border: 1px solid var(--border); color: var(--text-muted); }
+    .tag.accent { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.3); background: rgba(var(--accent-rgb), 0.06); }
+    .hero-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(56px, 10vw, 112px); font-weight: 800; line-height: 0.92; letter-spacing: -0.04em; color: var(--text); opacity: 0; animation: fadeUp 0.9s ease 0.1s forwards; }
+    .hero-name span { color: var(--accent); }
+    .hero-subtitle { margin-top: 20px; font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(18px, 2.8vw, 28px); font-weight: 300; color: var(--text-muted); letter-spacing: -0.02em; opacity: 0; animation: fadeUp 0.9s ease 0.25s forwards; }
+    .hero-intro { margin-top: 28px; font-size: 17px; line-height: 1.65; color: var(--text-muted); max-width: 620px; opacity: 0; animation: fadeUp 0.9s ease 0.4s forwards; }
+    .hero-meta { display: flex; gap: 40px; flex-wrap: wrap; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); opacity: 0; animation: fadeUp 0.9s ease 0.55s forwards; }
+    .hero-meta-label { font-size: 10px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+    .hero-meta-value { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+    .hero-divider { margin-top: 64px; width: 100%; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0.25; }
+
+    .hero-image { max-width: 1080px; margin: 0 auto; padding: 0 24px 48px; }
+    .hero-image img { width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--border); display: block; }
+
+    .inline-image { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+    .inline-image img { width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--border); display: block; }
+    .inline-image figcaption { margin-top: 12px; font-size: 12px; color: var(--text-dim); text-align: center; letter-spacing: 0.02em; }
+
+    .image-grid { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .image-grid figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .image-grid img { width: 100%; display: block; }
+    .image-grid figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
+
+    .content-section { max-width: 900px; margin: 0 auto; padding: 0 24px 100px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; }
+    .section-heading { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--text); margin-bottom: 48px; }
+    .section-intro { font-size: 16px; line-height: 1.7; color: var(--text-muted); max-width: 640px; margin-bottom: 40px; margin-top: -24px; }
+
+    /* Decision callout */
+    .decision-callout { margin-top: 20px; padding: 18px 22px; background: rgba(var(--accent-rgb), 0.04); border: 1px solid rgba(var(--accent-rgb), 0.15); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; }
+    .decision-callout-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .decision-callout-text { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+
+    /* Discovery */
+    .discovery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .discovery-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; }
+    .discovery-icon { font-size: 22px; margin-bottom: 16px; }
+    .discovery-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
+    .discovery-desc { font-size: 14px; line-height: 1.65; color: var(--text-muted); }
+
+    /* Old process flow */
+    .process-flow { margin-top: 40px; }
+    .flow-steps { display: flex; align-items: flex-start; gap: 0; flex-wrap: wrap; }
+    .flow-step { flex: 1; min-width: 120px; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 8px; }
+    .flow-node { width: 34px; height: 34px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; flex-shrink: 0; }
+    .flow-node-problem { background: rgba(var(--accent-rgb), 0.08); border-color: rgba(var(--accent-rgb), 0.35); color: var(--accent); }
+    .flow-label { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+    .flow-sub { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+    .flow-arrow { font-size: 18px; color: var(--text-dim); margin-top: 8px; flex-shrink: 0; padding: 0 4px; align-self: flex-start; padding-top: 8px; }
+
+    /* Problem cards */
+    .research-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-top: 48px; margin-bottom: 20px; }
+    .problem-list { display: flex; flex-direction: column; gap: 12px; }
+    .problem-item { display: grid; grid-template-columns: 44px 1fr; gap: 16px; padding: 20px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); align-items: start; }
+    .problem-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: 32px; font-weight: 800; color: rgba(var(--accent-rgb), 0.18); line-height: 1; letter-spacing: -0.04em; }
+    .problem-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--text); margin-bottom: 6px; }
+    .problem-desc { font-size: 13px; line-height: 1.65; color: var(--text-muted); }
+
+    /* Opportunity */
+    .opportunity-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .opportunity-item { padding: 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); position: relative; overflow: hidden; }
+    .opportunity-item::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0.35; }
+    .opportunity-icon { font-size: 20px; margin-bottom: 14px; }
+    .opportunity-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 8px; }
+    .opportunity-desc { font-size: 13px; line-height: 1.65; color: var(--text-muted); }
+
+    /* Approach */
+    .approach-list { display: flex; flex-direction: column; }
+    .approach-item { display: grid; grid-template-columns: 80px 1fr; gap: 24px; padding: 48px 0; border-bottom: 1px solid var(--border); }
+    .approach-item:first-child { border-top: 1px solid var(--border); }
+    .approach-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: 64px; font-weight: 800; color: var(--text-dim); line-height: 1; letter-spacing: -0.05em; }
+    .approach-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
+    .approach-desc { font-size: 15px; line-height: 1.65; color: var(--text-muted); }
+    .approach-visuals { margin-top: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .approach-visuals figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .approach-visuals img { width: 100%; display: block; }
+    .approach-visuals figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); letter-spacing: 0.02em; }
+    .approach-visual-full { margin-top: 12px; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .approach-visual-full img { width: 100%; display: block; }
+
+    /* Testing */
+    .testing-story { font-size: 15px; line-height: 1.7; color: var(--text-muted); margin-bottom: 32px; }
+
+    /* Subsection */
+    .subsection-label { font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .subsection-spacer { margin-top: 60px; }
+
+    /* Nice touches panels */
+    .touch-panel { background: var(--bg-card); border: 1px solid var(--border); border-top: 2px solid rgba(var(--accent-rgb), 0.4); border-radius: var(--radius-lg); padding: 36px; margin-bottom: 16px; }
+    .touch-panel-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
+    .touch-panel-desc { font-size: 15px; line-height: 1.7; color: var(--text-muted); }
+    .touch-panel-planned { display: inline-block; margin-top: 12px; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--border); padding: 3px 10px; border-radius: 20px; }
+
+    /* Quotes */
+    .quotes-list { display: flex; flex-direction: column; gap: 16px; }
+    .quote-block { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 28px 32px; }
+    .quote-text { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(17px, 2.2vw, 22px); font-weight: 300; line-height: 1.45; letter-spacing: -0.02em; color: var(--text); margin-bottom: 16px; }
+    .quote-text::before { content: '\201C'; }
+    .quote-text::after  { content: '\201D'; }
+    .quote-author { font-size: 12px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* Reflections */
+    .reflection-list { display: flex; flex-direction: column; }
+    .reflection-item { display: grid; grid-template-columns: 44px 1fr; gap: 20px; padding: 36px 0; border-bottom: 1px solid var(--border); }
+    .reflection-item:first-child { border-top: 1px solid var(--border); }
+    .reflection-marker { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: var(--text-dim); line-height: 1.3; }
+    .reflection-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 8px; }
+    .reflection-desc { font-size: 15px; line-height: 1.65; color: var(--text-muted); }
+
+    /* Next steps */
+    .next-steps { display: flex; flex-direction: column; }
+    .next-step { display: flex; gap: 20px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid var(--border); }
+    .next-step:first-child { border-top: 1px solid var(--border); }
+    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 7px; flex-shrink: 0; }
+    .step-dot.wip { background: rgba(var(--accent-rgb), 0.4); border: 1px solid var(--accent); }
+    .step-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+    .step-desc { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+
+    .section-divider { width: 100%; height: 1px; background: var(--border); max-width: 900px; margin: 0 auto 100px; }
+
+    .case-cta { max-width: 900px; margin: 0 auto; padding: 0 24px 140px; text-align: center; }
+    .cta-heading { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(32px, 5vw, 56px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--text); margin-bottom: 20px; }
+    .cta-sub { font-size: 16px; color: var(--text-muted); margin-bottom: 40px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border-radius: 40px; background: var(--accent); color: #EEEEF0; font-size: 15px; font-weight: 600; text-decoration: none; transition: opacity 0.2s, transform 0.2s; letter-spacing: -0.01em; }
+    .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .cta-btn svg { width: 16px; height: 16px; }
+
+    footer { border-top: 1px solid var(--border); padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-left { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.03em; }
+    .footer-left .c { color: var(--blue); }
+    .footer-right { display: flex; align-items: center; gap: 20px; font-size: 12px; color: var(--text-dim); letter-spacing: 0.02em; }
+    .footer-dhd { height: 22px; width: auto; opacity: 0.28; transition: opacity 0.2s; }
+    .footer-dhd:hover { opacity: 0.6; }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Chapter nav */
+    .chapter-nav { position: sticky; top: 60px; z-index: 90; background: rgba(9,9,14,0.88); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); opacity: 0; transform: translateY(-4px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
+    .chapter-nav.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .chapter-nav-inner { display: flex; overflow-x: auto; scrollbar-width: none; max-width: 920px; margin: 0 auto; padding: 0 24px; }
+    .chapter-nav-inner::-webkit-scrollbar { display: none; }
+    .chapter-nav-item { display: flex; align-items: center; padding: 13px 14px; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--text-dim); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; position: relative; top: 1px; flex-shrink: 0; }
+    .chapter-nav-item:hover { color: var(--text-muted); }
+    .chapter-nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Next project */
+    .next-project { border-top: 1px solid var(--border); padding: 36px 40px; display: flex; align-items: center; justify-content: space-between; max-width: 100%; }
+    .next-project-label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); }
+    .next-project-link { display: inline-flex; align-items: center; gap: 10px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); text-decoration: none; transition: color 0.2s; }
+    .next-project-link:hover { color: var(--accent); }
+    .next-project-link svg { width: 18px; height: 18px; transition: transform 0.2s; }
+    .next-project-link:hover svg { transform: translateX(4px); }
+
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; }
+      .discovery-grid, .opportunity-list, .approach-visuals, .image-grid { grid-template-columns: 1fr; }
+      .approach-item { grid-template-columns: 56px 1fr; }
+      .approach-num { font-size: 44px; }
+      .problem-item { grid-template-columns: 36px 1fr; }
+      .reflection-item { grid-template-columns: 32px 1fr; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chapter-nav" id="chapter-nav">
+    <div class="chapter-nav-inner">
+      <a class="chapter-nav-item" href="#s-discovery">Discovery</a>
+      <a class="chapter-nav-item" href="#s-opportunity">Opportunity</a>
+      <a class="chapter-nav-item" href="#s-decisions">Decisions</a>
+      <a class="chapter-nav-item" href="#s-testing">Testing</a>
+      <a class="chapter-nav-item" href="#s-nice-touches">Nice Touches</a>
+      <a class="chapter-nav-item" href="#s-quotes">Players</a>
+      <a class="chapter-nav-item" href="#s-reflections">Reflections</a>
+      <a class="chapter-nav-item" href="#s-next">Roadmap</a>
+    </div>
+  </div>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-back">
+      <svg viewBox="0 0 14 14" fill="none"><path d="M13 7H1M7 13l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <img src="moveclear_logo.png" alt="Move Clear" class="nav-mc-logo">
+    </a>
+    <a href="https://d4vidholly.github.io/Boro-Predictor/" target="_blank" rel="noopener" class="nav-cta">
+      Try Boro Predictor
+      <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="case-hero">
+    <div class="hero-tags">
+      <span class="tag accent">UX Design</span>
+      <span class="tag">Product Design</span>
+      <span class="tag">Front-End</span>
+      <span class="tag">Self-Initiated</span>
+    </div>
+    <h1 class="hero-name">Boro <span>Predictor</span></h1>
+    <p class="hero-subtitle">Your season, before a ball is kicked.</p>
+    <p class="hero-intro">What started as a family prediction game run on a shared Excel spreadsheet grew into something more: a mobile-first web platform for Boro fans to predict all 46 Championship fixtures, track their season, and find out what kind of fan they really are. Built from scratch — design, product, and code.</p>
+    <div class="hero-meta">
+      <div>
+        <p class="hero-meta-label">Role</p>
+        <p class="hero-meta-value">Full Stack Product Designer</p>
+      </div>
+      <div>
+        <p class="hero-meta-label">Type</p>
+        <p class="hero-meta-value">Solo / Self-initiated</p>
+      </div>
+      <div>
+        <p class="hero-meta-label">Platform</p>
+        <p class="hero-meta-value">Mobile-first web app</p>
+      </div>
+      <div>
+        <p class="hero-meta-label">Status</p>
+        <p class="hero-meta-value">Live</p>
+      </div>
+    </div>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- HERO IMAGE -->
+  <div class="hero-image">
+    <img src="predictor-assets/Screenshot%202026-05-25%20130117.png" alt="Boro Predictor — fixture list" loading="lazy">
+  </div>
+
+  <!-- DISCOVERY -->
+  <section class="content-section" id="s-discovery">
+    <p class="section-eyebrow reveal">Discovery</p>
+    <h2 class="section-heading reveal">Where it started.</h2>
+    <p class="section-intro reveal">A group of family and friends had been running a season-long prediction game for years, all managed by one person. He built the spreadsheet, entered all 46 fixtures manually, emailed it to every player before the season started, and then — when files came back blank, formatted wrong, or not at all — chased them individually to fix it. The night before predictions locked was the worst: files arriving in the wrong format, scores entered as dates, back-and-forth that ate up the evening before a ball had been kicked.</p>
+
+    <div class="discovery-grid">
+      <div class="discovery-card reveal reveal-delay-1">
+        <p class="discovery-icon">📊</p>
+        <p class="discovery-title">The Excel workaround</p>
+        <p class="discovery-desc">The spreadsheet itself was carefully built — formula-driven, well organised. But the process around it introduced friction at every step: download, fill in, save, email back. On a desktop. Before the season started. For some players that was already one step too many.</p>
+      </div>
+      <div class="discovery-card reveal reveal-delay-2">
+        <p class="discovery-icon">📸</p>
+        <p class="discovery-title">One for the records</p>
+        <p class="discovery-desc">One family member — who will not be named — wrote all their scores on paper, photographed it, and texted it through. They missed two fixtures in the process. They still beat me in the final table. The workarounds people were inventing to participate showed how much they cared about the game itself. The spreadsheet was just getting in the way.</p>
+      </div>
+    </div>
+
+    <div class="process-flow reveal">
+      <p class="research-eyebrow" style="margin-top:40px;margin-bottom:16px;">The old process</p>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-node">1</div>
+          <p class="flow-label">Manager creates spreadsheet</p>
+          <p class="flow-sub">46 fixtures entered manually</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-node">2</div>
+          <p class="flow-label">Emails all players</p>
+          <p class="flow-sub">File attached, instructions included</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-node">3</div>
+          <p class="flow-label">Players download, fill in, email back</p>
+          <p class="flow-sub">Desktop only. No mobile option</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-node flow-node-problem">!</div>
+          <p class="flow-label">Errors &amp; chasing</p>
+          <p class="flow-sub">Wrong formats, blank files, back-and-forth before the deadline</p>
+        </div>
+      </div>
+      <div class="decision-callout" style="margin-top:16px;">
+        <p class="decision-callout-label">The night before</p>
+        <p class="decision-callout-text">Despite the friction, players were invested enough to screenshot their own predictions and go back to check them throughout the season. The appetite to play was real — the process was just getting in the way.</p>
+      </div>
+    </div>
+
+    <p class="research-eyebrow reveal">What wasn't working</p>
+    <div class="problem-list">
+      <div class="problem-item reveal reveal-delay-1">
+        <p class="problem-num">01</p>
+        <div>
+          <p class="problem-title">Reliance on desktop Excel</p>
+          <p class="problem-desc">Participants had to download a spreadsheet, input scores, save the file, and email it back — introducing friction at every step. There was no mobile-friendly alternative, and most people only looked at their predictions a couple of times a season.</p>
+        </div>
+      </div>
+      <div class="problem-item reveal reveal-delay-2">
+        <p class="problem-num">02</p>
+        <div>
+          <p class="problem-title">Tech literacy gaps</p>
+          <p class="problem-desc">Some participants didn't have Excel. Others accidentally formatted scores as dates, or submitted blank files, creating confusion and back-and-forth for the game manager. The tool assumed a level of comfort with spreadsheets that not everyone had.</p>
+        </div>
+      </div>
+      <div class="problem-item reveal reveal-delay-3">
+        <p class="problem-num">03</p>
+        <div>
+          <p class="problem-title">Numbers without a story</p>
+          <p class="problem-desc">Even when it worked, the spreadsheet returned a number. It didn't tell you what kind of season you'd predicted, whether your gut matched your picks, or give you anything to feel. It was functional — and nothing more.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE OPPORTUNITY -->
+  <section class="content-section" id="s-opportunity">
+    <p class="section-eyebrow reveal">The opportunity</p>
+    <h2 class="section-heading reveal">What it needed to be.</h2>
+    <p class="section-intro reveal">Not just a cleaner spreadsheet — a platform. One that handles the admin, opens the game to everyone regardless of their device, and turns a points tally into something a Boro fan actually wants to read.</p>
+    <div class="opportunity-list">
+      <div class="opportunity-item reveal reveal-delay-1">
+        <p class="opportunity-icon">📱</p>
+        <p class="opportunity-title">Simplify the experience</p>
+        <p class="opportunity-desc">Make it easy for everyone to enter predictions — especially those with limited digital experience. No downloads, no email, no formatting issues. Works on a phone.</p>
+      </div>
+      <div class="opportunity-item reveal reveal-delay-2">
+        <p class="opportunity-icon">⚽</p>
+        <p class="opportunity-title">Add enjoyment</p>
+        <p class="opportunity-desc">Move beyond spreadsheets to something more visually engaging. Some players just want it to work on their phone; others love leaning into football data and want the depth to explore it. The design had to serve both — accessible to the casual player, rewarding for the stat-head.</p>
+      </div>
+      <div class="opportunity-item reveal reveal-delay-3">
+        <p class="opportunity-icon">📰</p>
+        <p class="opportunity-title">Create value</p>
+        <p class="opportunity-desc">With all predictions captured centrally, there's potential for storytelling. Turn the data into something — a leaderboard, a season narrative, a newspaper review. Something worth sharing.</p>
+      </div>
+      <div class="opportunity-item reveal reveal-delay-4">
+        <p class="opportunity-icon">🏟️</p>
+        <p class="opportunity-title">Built to grow</p>
+        <p class="opportunity-desc">Manageable for a family game this season. Scaleable to a full multi-club platform in future — without needing to rebuild from scratch.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WIREFRAME -->
+  <div class="inline-image">
+    <figure>
+      <img src="predictor-assets/boro-predictor-wireframe.png" alt="Boro Predictor wireframes" loading="lazy">
+      <figcaption>Early wireframes — establishing the fixture list layout and season flow</figcaption>
+    </figure>
+  </div>
+
+  <!-- DECISIONS -->
+  <section class="content-section" id="s-decisions">
+    <p class="section-eyebrow reveal">Decisions that shaped it</p>
+    <h2 class="section-heading reveal">Three things that mattered most.</h2>
+    <div class="approach-list">
+
+      <div class="approach-item reveal">
+        <p class="approach-num">1</p>
+        <div>
+          <p class="approach-title">From tool to platform</p>
+          <p class="approach-desc">The original brief was simple: replace the Excel spreadsheet. Fix the friction. But with stronger skills and a clearer view of what the game could be, the scope expanded. The app now manages the whole prediction game — locking predictions before the season starts, collecting player registrations via Supabase, tracking a leaderboard, and surfacing the dashboard that keeps Boro fans honest to their predictions as the season unfolds. That shift from admin tool to platform changed every design decision that followed.</p>
+          <p class="approach-desc" style="margin-top:12px;">The locking mechanic is where the platform logic becomes concrete. Predictions lock the night before the season opener. Players are reminded through a deadline banner on the predictor page, a notification on the dashboard, and a pre-season newsletter. Locked-in status is visible on the account page. If a player doesn't submit in time, all their scores default to 0–0 — they've technically submitted, they've just not taken part. No overrides, no extensions. That firm boundary is what makes the game real.</p>
+          <div class="approach-visuals">
+            <figure>
+              <img src="predictor-assets/predictor_early.png" alt="Early version — replaces Excel" loading="lazy">
+              <figcaption>Early version — functional, close to the spreadsheet</figcaption>
+            </figure>
+            <figure>
+              <img src="predictor-assets/Screenshot%202026-05-25%20130117.png" alt="Predictor dashboard" loading="lazy">
+              <figcaption>Current version — predictions, dashboard, leaderboard</figcaption>
+            </figure>
+          </div>
+          <div class="decision-callout">
+            <p class="decision-callout-label">The decision</p>
+            <p class="decision-callout-text">Replacing a spreadsheet only solves the submission problem. Building a platform solves the whole game — locking predictions at the right moment, surfacing the leaderboard, and giving fans something to check back on during the season rather than just at the start. The 0–0 default for non-submitters removes any need for admin overrides: the deadline is the deadline, and the game manager's job is done.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="approach-item reveal reveal-delay-1">
+        <p class="approach-num">2</p>
+        <div>
+          <p class="approach-title">Fixture colour coding</p>
+          <p class="approach-desc">With 46 fixtures displayed at once, the list risked becoming a wall of text. The solution was visual: fixture rows change colour based on the predicted result — green for a win, grey for a draw, red for a loss. At a glance, you can read the entire season without parsing a single number. A run of red in February tells a story. A green April shows belief. The colour coding became one of the most commented-on features in testing — players noticed it immediately and checked back specifically to see the overall picture their season made.</p>
+          <br>
+          <figure style="border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;">
+        <img src="predictor-assets/Screenshot%202026-05-25%20130154.png" alt="Season dashboard" loading="lazy" style="width:100%;display:block;">
+        <figcaption style="padding:12px 16px;font-size:12px;color:var(--text-dim);background:var(--bg-card);border-top:1px solid var(--border);">Season dashboard — upcoming fixture, points running total, prediction tracker</figcaption>
+      </figure>
+          <div class="decision-callout">
+            <p class="decision-callout-label">The decision</p>
+            <p class="decision-callout-text">46 rows of scores are data. 46 colour-coded rows are a season. Visual encoding turns the fixture list into a readable narrative — you see an optimist's season or a cautious one before you've processed a single score. It was also a deliberate departure from the spreadsheet: where Excel had conditional formatting that felt like admin, the colour here is part of the experience — immediate, emotional, yours.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="approach-item reveal reveal-delay-2">
+        <p class="approach-num">3</p>
+        <div>
+          <p class="approach-title">Save state and month navigation</p>
+          <p class="approach-desc">Filling in 46 fixtures is a meaningful commitment — most players do it in more than one session and come back to check their predictions a couple of times across the season. Two UX decisions followed from that: a save feature that persists predictions between sessions, and month-based navigation that lets players jump directly to August, January, or the run-in without scrolling through a full season list. Small decisions, but they changed the pace of using the app — from a one-time data entry task to something you return to.</p>
+          <div class="decision-callout">
+            <p class="decision-callout-label">The decision</p>
+            <p class="decision-callout-text">46 fixtures isn't a form — it's a session. Save state means no one loses progress. Month toggling means a fan checking their April run-in doesn't have to scroll past August to get there.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SCREENSHOTS -->
+  <div class="image-grid reveal">
+    <figure>
+      <img src="predictor-assets/Screenshot%202026-05-25%20130129.png" alt="Fixture list with colour coding" loading="lazy">
+      <figcaption>Colour-coded fixture list — win, draw, loss at a glance</figcaption>
+    </figure>
+    <figure>
+      <img src="predictor-assets/Screenshot%202026-05-25%20130143.png" alt="Month navigation" loading="lazy">
+      <figcaption>Month navigation — jump to any point in the season</figcaption>
+    </figure>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- TESTING -->
+  <section class="content-section" id="s-testing">
+    <p class="section-eyebrow reveal">Testing</p>
+    <h2 class="section-heading reveal">What testing found.</h2>
+    <p class="testing-story reveal">Testing to date has been with warm insiders — the same family group who'd been running the Excel game. Qualitative: would you use something like this, what would you add, what felt wrong? Their lived experience was the research — people who remembered photographing their old prediction sheets to check through the season, or chasing their own submission the night before the deadline. Alongside that, established prediction platforms like Super 6 provided a reference point for conventions worth keeping and conventions worth breaking. A/B testing was run on some of the card layouts to pressure-test hierarchy and scan order. The full platform hasn't been tested with cold users yet — that's the next phase.</p>
+    <p class="testing-story reveal">With 46 fixtures to fill in on a phone, mobile edge cases surfaced early. The most significant was a double-tap zoom issue: tapping a score input twice caused iOS to zoom into the field, breaking the layout and requiring users to pinch back out before continuing. The fix was a CSS meta viewport adjustment and touch event handling — small to implement, but only visible through real device testing on the actual workflow of entering 46 scores in sequence.</p>
+    <div class="decision-callout reveal" style="margin-bottom:40px;">
+      <p class="decision-callout-label">The fix</p>
+      <p class="decision-callout-text">Resolved by setting <code style="font-size:12px;background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:4px;">touch-action: manipulation</code> on score inputs — disabling the double-tap zoom gesture while preserving normal tap behaviour. A one-line fix for a workflow-breaking bug that only appeared under real use conditions.</p>
+    </div>
+    <p class="testing-story reveal">On the data side, the original build hardcoded all 46 fixtures and team information directly into the JavaScript. It worked for one season, but updating for a new campaign meant editing the application code — the same problem the Excel workaround had created. The fix was migrating team and fixture data to an external API, fetched on page load. New season: update the data source, not the app.</p>
+    <div class="decision-callout reveal">
+      <p class="decision-callout-label">The decision</p>
+      <p class="decision-callout-text">Hardcoded fixture data is a liability — it makes the app valid for exactly one season. Moving to an API means the application logic stays stable and a new season requires a data update, not a code change. The same principle that drove the Google Sheets decision on Wembley.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- NICE TOUCHES -->
+  <section class="content-section" id="s-nice-touches">
+    <p class="section-eyebrow reveal">Nice touches</p>
+    <h2 class="section-heading reveal">The details that make it feel real.</h2>
+
+    <!-- Dashboard -->
+    <p class="subsection-label reveal">Your season, mapped out</p>
+    <p class="section-intro reveal" style="margin-top:0">The prediction form is one part of the experience. What players see after they submit is the other.</p>
+
+    <div class="touch-panel reveal" style="margin-bottom:16px;">
+      <p class="touch-panel-title">Honest to your predictions</p>
+      <p class="touch-panel-desc">The dashboard puts the fan on their journey. Upcoming fixtures show what you've predicted for the next game: going to Burnley in April, you can see what you called before you even get on the coach. Players total up Boro's points to see if that matches their gut feeling for where the season is heading. Until now it was just a column of numbers in a spreadsheet. Here it's a readable timeline of the season you committed to before a ball was kicked.</p>
+    </div>
+
+    <div style="margin-bottom: 16px;">
+      <figure style="border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;">
+        <img src="predictor-assets/Screenshot%202026-05-25%20130154.png" alt="Season dashboard" loading="lazy" style="width:100%;display:block;">
+        <figcaption style="padding:12px 16px;font-size:12px;color:var(--text-dim);background:var(--bg-card);border-top:1px solid var(--border);">Season dashboard — upcoming fixture, points running total, prediction tracker</figcaption>
+      </figure>
+    </div>
+
+    <!-- End of Season Report -->
+    <div class="subsection-spacer"></div>
+    <p class="subsection-label reveal">The Season Report</p>
+
+    <div class="touch-panel reveal" style="margin-bottom:16px;">
+      <p class="touch-panel-title">A newspaper review of your predictions</p>
+      <p class="touch-panel-desc">Local journalism is huge for clubs like Boro — match reports, season reviews, the kind of writing that speaks directly to the fanbase. I wanted to create something that combined the two. The Season Report reads all 46 predictions, calculates the points outcome, and generates a newspaper-style review written in that voice. Predict a title charge and you'll see <em>Smashed The League</em> headlines. Sit on the apprehensive side and you'll read about tears in the stands and brave lower-mid-table battles. The same predictions, made in August, come back as a story in May. It's the part of the app players talk about most.</p>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <figure style="border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;">
+        <img src="predictor-assets/Screenshot%202026-05-25%20130256.png" alt="End of season newspaper report" loading="lazy" style="width:100%;display:block;">
+        <figcaption style="padding:12px 16px;font-size:12px;color:var(--text-dim);background:var(--bg-card);border-top:1px solid var(--border);">The Season Report — a newspaper review generated from 46 predictions</figcaption>
+      </figure>
+    </div>
+
+    <div class="decision-callout reveal" style="margin-bottom: 16px;">
+      <p class="decision-callout-label">Player feedback</p>
+      <p class="decision-callout-text">The season report is a great overview of my predictions — definitely too optimistic! That reaction — recognition, self-awareness, the laugh at yourself — is exactly what the report was designed to produce.</p>
+    </div>
+
+    <!-- Clear All -->
+    <div class="subsection-spacer"></div>
+    <p class="subsection-label reveal">Clear All</p>
+
+    <div class="touch-panel reveal" style="margin-bottom:16px;">
+      <p class="touch-panel-title">Start over without the admin</p>
+      <p class="touch-panel-desc">Filling in 46 predictions is a meaningful session — but sometimes you want to start from scratch. Manually clearing each result one by one would be worse than the spreadsheet. A single Clear All button wipes the slate instantly. The catch: it triggers a confirmation prompt first. An accidental tap on 46 filled predictions is the kind of frustration that puts people off an app for good. The extra step costs one second and prevents that entirely.</p>
+    </div>
+
+    <div class="decision-callout reveal" style="margin-bottom:0;">
+      <p class="decision-callout-label">Design note</p>
+      <p class="decision-callout-text">Destructive actions need friction. The "Are you sure?" prompt isn't a barrier — it's the feature. It tells the user their data matters and that the app is looking out for them.</p>
+    </div>
+
+    <!-- Records Awareness -->
+    <div class="subsection-spacer"></div>
+    <p class="subsection-label reveal">Records Awareness</p>
+
+    <div class="touch-panel reveal">
+      <p class="touch-panel-title">When a prediction makes history</p>
+      <p class="touch-panel-desc">A planned feature that would flag when a prediction breaks a historical record — surfacing context fans care about at the moment they're filling in a score. Predicting 10–0 against Sunderland? The app would surface it: that would be our biggest ever league win. Keeps predictions grounded in reality — or at least, lets fans know when they've left it behind.</p>
+      <span class="touch-panel-planned">Planned feature</span>
+    </div>
+
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- QUOTES -->
+  <section class="content-section" id="s-quotes">
+    <p class="section-eyebrow reveal">Heard from players</p>
+    <h2 class="section-heading reveal">What people said.</h2>
+    <div class="quotes-list">
+      <div class="quote-block reveal reveal-delay-1">
+        <p class="quote-text">I would definitely use this for next season's challenge.</p>
+        <p class="quote-author">Player — family prediction game</p>
+      </div>
+      <div class="quote-block reveal reveal-delay-2">
+        <p class="quote-text">Love the visual colour change of the fixtures based on the result I predicted.</p>
+        <p class="quote-author">Player — tested on mobile</p>
+      </div>
+      <div class="quote-block reveal reveal-delay-3">
+        <p class="quote-text">The season report is a great overview of my predictions — definitely too optimistic!</p>
+        <p class="quote-author">Player — end of season review</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFLECTIONS -->
+  <section class="content-section" id="s-reflections">
+    <p class="section-eyebrow reveal">Looking back</p>
+    <h2 class="section-heading reveal">What I'd do differently.</h2>
+    <div class="reflection-list">
+      <div class="reflection-item reveal">
+        <p class="reflection-marker">↩</p>
+        <div>
+          <p class="reflection-title">Think platform from day one</p>
+          <p class="reflection-desc">The early build was scoped as a spreadsheet replacement — which kept the thinking small. The platform ambitions came later and required revisiting decisions that had already been made. Starting with "what does this grow into?" would have shaped the data model, the save logic, and the multi-user architecture from the start.</p>
+        </div>
+      </div>
+      <div class="reflection-item reveal reveal-delay-1">
+        <p class="reflection-marker">↩</p>
+        <div>
+          <p class="reflection-title">Design mobile-first, not mobile-compatible</p>
+          <p class="reflection-desc">The double-tap zoom bug, the scroll behaviour on 46 rows, the touch target sizing on score inputs — most of these were retrofitted rather than designed in. For an app where the primary use case is a phone on the sofa, mobile constraints should have driven every layout decision from the first wireframe.</p>
+        </div>
+      </div>
+      <div class="reflection-item reveal reveal-delay-2">
+        <p class="reflection-marker">↩</p>
+        <div>
+          <p class="reflection-title">Separate data from code earlier</p>
+          <p class="reflection-desc">Hardcoding the fixture list made the first version faster to build. It also meant the second season required a bigger refactor than it should have. The API migration was the right call — it just should have been the starting architecture, not a fix.</p>
+        </div>
+      </div>
+      <div class="reflection-item reveal reveal-delay-3">
+        <p class="reflection-marker">✓</p>
+        <div>
+          <p class="reflection-title">Deliberately left out match history and pre-match stats</p>
+          <p class="reflection-desc">An early idea was to surface Boro's historical record against each opponent before a player filled in their prediction — recent form, head-to-head results, that kind of thing. It was cut on purpose. The risk was homogenisation: if everyone sees the same data before predicting, everyone makes the same predictions, and the leaderboard becomes meaningless. Part of the game's value is the difference between an optimist and a realist. Players who want to research can do their own — the app won't nudge them toward a consensus.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEXT STEPS -->
+  <section class="content-section" id="s-next">
+    <p class="section-eyebrow reveal">What's next</p>
+    <h2 class="section-heading reveal">On the roadmap.</h2>
+    <div class="next-steps">
+      <div class="next-step reveal reveal-delay-1">
+        <div class="step-dot wip"></div>
+        <div>
+          <p class="step-title">Points ladder — built, activating</p>
+          <p class="step-desc">The leaderboard is built and live, running off Supabase. Once 24 players have registered and submitted their predictions, it activates automatically. Currently waiting for a full group to fill in.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-2">
+        <div class="step-dot wip"></div>
+        <div>
+          <p class="step-title">Records Awareness</p>
+          <p class="step-desc">Flag predictions that would break historical records in real time — surfacing context at the moment a player fills in a score. Predicting 10–0 against Sunderland? The app tells you that would be the biggest ever league win. Currently in development.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-3">
+        <div class="step-dot"></div>
+        <div>
+          <p class="step-title">Live results integration</p>
+          <p class="step-desc">Pull in actual match results as the season progresses to score predictions automatically. No manual entry — the dashboard updates itself.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-4">
+        <div class="step-dot"></div>
+        <div>
+          <p class="step-title">LLM-generated season report</p>
+          <p class="step-desc">The current Season Report uses six predetermined narrative tiers based on total points. A future version could pass the full prediction set to a language model and generate a genuinely custom piece — a different story for every player, every season. Probably not worth building until the core platform has more users, but the intent is there.</p>
+        </div>
+      </div>
+      <div class="next-step reveal">
+        <div class="step-dot"></div>
+        <div>
+          <p class="step-title">Other clubs</p>
+          <p class="step-desc">Extend the platform beyond Boro — so any Championship or Premier League fan can commit to their season before a ball is kicked.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="case-cta">
+    <h2 class="cta-heading reveal">Make your move before the season starts.</h2>
+    <p class="cta-sub reveal reveal-delay-1">Predict every Boro fixture. Lock them in. Then see how right you were.</p>
+    <a href="https://d4vidholly.github.io/Boro-Predictor/" target="_blank" rel="noopener" class="cta-btn reveal reveal-delay-2">
+      Try Boro Predictor
+      <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </section>
+
+  <div class="next-project">
+    <span class="next-project-label">Next project</span>
+    <a href="moveclear-wembley.html" class="next-project-link">
+      Wembley
+      <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+
+  <footer>
+    <span class="footer-left">Move<span class="c">Clear</span></span>
+    <span class="footer-right">
+      <span>&copy; 2026 Move Clear Labs</span>
+      <a href="https://d4vidholly.github.io/" target="_blank" rel="noopener"><img src="DHD_logo.png" alt="DHD" class="footer-dhd"></a>
+    </span>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40), { passive: true });
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Chapter nav
+    const chapterNav = document.getElementById('chapter-nav');
+    const chapterItems = document.querySelectorAll('.chapter-nav-item');
+    const chapterSections = document.querySelectorAll('[id^="s-"]');
+
+    // Show chapter nav once hero leaves viewport
+    const heroEl = document.querySelector('.case-hero');
+    if (heroEl) {
+      new IntersectionObserver(entries => {
+        chapterNav.classList.toggle('visible', !entries[0].isIntersecting);
+      }, { threshold: 0.05 }).observe(heroEl);
+    }
+
+    // Highlight active chapter
+    const chapterSpy = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          chapterItems.forEach(i => i.classList.remove('active'));
+          const active = document.querySelector(`.chapter-nav-item[href="#${entry.target.id}"]`);
+          if (active) {
+            active.classList.add('active');
+            const inner = active.closest('.chapter-nav-inner');
+            if (inner) inner.scrollTo({ left: active.offsetLeft - inner.offsetWidth / 2 + active.offsetWidth / 2, behavior: 'smooth' });
+          }
+        }
+      });
+    }, { threshold: 0.2, rootMargin: '-15% 0px -70% 0px' });
+    chapterSections.forEach(s => chapterSpy.observe(s));
+  </script>
+
+</body>
+</html>

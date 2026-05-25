@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Move Clear — Data Built for Devotion. A studio of digital tools for people who care too much about sport.">
+  <link rel="icon" type="image/png" href="MC_round.png">
+  <title>Move Clear — Data Built for Devotion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #09090E;
+      --bg-card:      #0F0F16;
+      --bg-card-hover:#141420;
+      --text:         #EEEEF0;
+      --text-muted:   rgba(238,238,240,0.45);
+      --text-dim:     rgba(238,238,240,0.18);
+      --blue:         #5AC8FA;
+      --border:       rgba(238,238,240,0.07);
+      --border-hover: rgba(238,238,240,0.14);
+      --radius:       14px;
+      --radius-lg:    20px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Instrument Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ──────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      transition: background 0.4s ease, border-color 0.4s ease;
+      border-bottom: 1px solid transparent;
+    }
+    nav.scrolled {
+      background: rgba(9,9,14,0.82);
+      border-color: var(--border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .nav-mc-logo {
+      height: 26px;
+      width: auto;
+      display: block;
+      transition: opacity 0.2s;
+    }
+    .nav-mc-logo:hover { opacity: 0.8; }
+    .nav-dhd {
+      height: 18px;
+      width: auto;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .nav-dhd:hover { opacity: 0.8; }
+
+    /* ── HERO ─────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 30%, rgba(90,200,250,0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 20% 80%, rgba(90,200,250,0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.1s forwards;
+    }
+
+    .hero-wordmark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(72px, 13vw, 160px);
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.2s forwards;
+    }
+    .hero-wordmark .c {
+      color: var(--blue);
+      display: block;
+    }
+
+    .hero-tagline {
+      margin-top: 36px;
+      font-size: clamp(17px, 2.5vw, 22px);
+      font-weight: 400;
+      color: var(--text-muted);
+      letter-spacing: -0.01em;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.4s forwards;
+    }
+
+    .hero-sub {
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--text-dim);
+      letter-spacing: 0.01em;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeUp 1s ease 1s forwards;
+    }
+    .hero-scroll span {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--blue), transparent);
+      animation: pulse-line 2s ease infinite;
+    }
+    @keyframes pulse-line {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* ── STATEMENT ────────────────────────────────────────────── */
+    .statement {
+      padding: 120px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .statement-text {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(28px, 4.5vw, 52px);
+      font-weight: 300;
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+      color: var(--text);
+    }
+    .statement-text em {
+      font-style: normal;
+      color: var(--blue);
+    }
+    .statement-meta {
+      margin-top: 32px;
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    /* ── PRODUCTS ─────────────────────────────────────────────── */
+    .products-section {
+      padding: 40px 24px 120px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .products-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .products-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+      padding-left: 2px;
+    }
+    .products-tagline {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      max-width: 400px;
+    }
+    .suite-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #34C759;
+      background: rgba(52,199,89,0.08);
+      border: 1px solid rgba(52,199,89,0.18);
+      border-radius: 20px;
+      padding: 6px 13px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .suite-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34C759;
+      animation: pulse-dot 2s ease infinite;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 36px 32px;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, var(--blue)), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .product-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .product-card:hover::before { opacity: 1; }
+
+    .card-tag-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .card-tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      background: var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
+    }
+    .card-tag.accent {
+      color: var(--card-accent, var(--blue));
+      background: rgba(90,200,250,0.08);
+    }
+
+    .card-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      letter-spacing: 0.01em;
+    }
+    .card-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      flex: 1;
+    }
+    .card-actions {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-visit, .btn-case-study {
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: opacity 0.2s, background 0.2s, border-color 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .btn-visit {
+      color: var(--bg);
+      background: var(--card-accent, var(--blue));
+    }
+    .btn-visit:hover { opacity: 0.82; }
+    .btn-case-study {
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid var(--border);
+    }
+    .btn-case-study:hover {
+      color: var(--text);
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
+    }
+    .btn-visit svg, .btn-case-study svg { width: 11px; height: 11px; }
+
+    .card-status-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .card-status-badge.live {
+      color: #34C759;
+      background: rgba(52,199,89,0.1);
+      border: 1px solid rgba(52,199,89,0.18);
+    }
+    .card-status-badge.dev {
+      color: #FF9F0A;
+      background: rgba(255,159,10,0.08);
+      border: 1px solid rgba(255,159,10,0.18);
+    }
+    .card-status-badge.coming-soon {
+      color: var(--text-dim);
+      background: transparent;
+      border: 1px solid var(--border);
+    }
+    .card-live-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse-dot 2s ease infinite;
+    }
+
+    .product-card.locked {
+      opacity: 0.4;
+      cursor: default;
+    }
+    .product-card.locked:hover {
+      background: var(--bg-card);
+      border-color: var(--border);
+      transform: none;
+    }
+    .product-card.locked::before { display: none; }
+
+    /* Product accent colours */
+    .card-tag { --card-accent: var(--blue); }
+    [data-product="tag"]       { --card-accent: #C8FF47; }
+    [data-product="predictor"] { --card-accent: #FF453A; }
+    [data-product="wembley"]   { --card-accent: #34C759; }
+    [data-product="wnf"]       { --card-accent: #5AC8FA; }
+
+    [data-product="tag"]       .card-tag.accent { color: #C8FF47; background: rgba(200,255,71,0.08); }
+    [data-product="predictor"] .card-tag.accent { color: #FF453A; background: rgba(255,69,58,0.08); }
+    [data-product="wembley"]   .card-tag.accent { color: #34C759; background: rgba(52,199,89,0.08); }
+    [data-product="wnf"]       .card-tag.accent { color: #5AC8FA; background: rgba(90,200,250,0.08); }
+
+    /* ── ABOUT ────────────────────────────────────────────────── */
+    .about-section { padding: 80px 24px; max-width: 1080px; margin: 0 auto; }
+    .about-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 28px; }
+    .about-layout { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; flex-wrap: wrap; }
+    .about-text { flex: 1; min-width: 240px; }
+    .about-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(32px, 5vw, 52px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--text); margin-bottom: 8px; }
+    .about-title { font-size: 13px; color: var(--blue); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px; }
+    .about-bio { font-size: 15px; line-height: 1.7; color: var(--text-muted); max-width: 520px; }
+    .about-ctas { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+    .about-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 40px; border: 1px solid var(--border-hover); color: var(--text-muted); font-size: 13px; font-weight: 500; text-decoration: none; transition: color 0.2s, border-color 0.2s; white-space: nowrap; }
+    .about-cta:hover { color: var(--text); border-color: rgba(238,238,240,0.35); }
+    .about-cta svg { width: 12px; height: 12px; transition: transform 0.2s; }
+    .about-cta:hover svg { transform: translateX(3px); }
+    @media (max-width: 700px) { .about-layout { flex-direction: column; gap: 28px; align-items: flex-start; } .about-ctas { flex-direction: row; flex-wrap: wrap; } }
+
+    /* ── CODA ─────────────────────────────────────────────────── */
+    .coda {
+      padding: 100px 24px 120px;
+      text-align: center;
+    }
+    .coda-line {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      color: var(--text-dim);
+      line-height: 1.1;
+    }
+    .coda-line span {
+      color: var(--text);
+      position: relative;
+    }
+    .coda-line span::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 2px;
+      background: var(--blue);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.6s ease;
+    }
+    .coda:hover .coda-line span::after { transform: scaleX(1); }
+    .coda-byline {
+      margin-top: 40px;
+      font-size: 13px;
+      color: var(--text-dim);
+      letter-spacing: 0.03em;
+    }
+    .coda-byline a {
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .coda-byline a:hover { color: var(--text); border-color: var(--text-muted); }
+
+    /* ── FOOTER ───────────────────────────────────────────────── */
+    footer {
+      padding: 28px 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-mc-logo {
+      height: 28px;
+      width: 28px;
+      border-radius: 50%;
+      display: block;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .footer-mc-logo:hover { opacity: 1; }
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 0.02em;
+    }
+    .footer-dhd {
+      height: 22px;
+      width: auto;
+      opacity: 0.28;
+      transition: opacity 0.2s;
+    }
+    .footer-dhd:hover { opacity: 0.6; }
+
+    /* ── SCROLL REVEALS ───────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── DIVIDER ──────────────────────────────────────────────── */
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    /* ── ANIMATIONS ───────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────────────── */
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; }
+      .products-grid { grid-template-columns: 1fr; }
+      .product-card { padding: 28px 24px 24px; }
+      .products-header { flex-direction: column; gap: 14px; }
+      .card-actions { flex-wrap: wrap; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+      .hero-scroll { display: none; }
+    }
+
+    @media (max-width: 500px) {
+      .hero-wordmark { letter-spacing: -0.03em; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#"><img src="moveclear_logo.png" alt="Move Clear" class="nav-mc-logo"></a>
+    <a href="https://d4vidholly.github.io/" target="_blank" rel="noopener"><img src="DHD_logo.png" alt="DHD" class="nav-dhd"></a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-eyebrow">Move Clear Labs</p>
+    <h1 class="hero-wordmark">
+      Move<span class="c">Clear</span>
+    </h1>
+    <p class="hero-tagline">Data Built for Devotion</p>
+    <p class="hero-sub">A studio of digital tools for people who care too much about sport.</p>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- STATEMENT -->
+  <section class="statement">
+    <p class="statement-text reveal">
+      Every tool in the suite does one thing: gives you a&nbsp;<em>sharper, truer read</em> on the game you&rsquo;re already in.
+    </p>
+    <p class="statement-meta reveal reveal-delay-2">
+      Not for casual observers. For the Parkrun runner tracking every split. The supporter who commits their predictions before a ball is kicked. The person who has played the same board game their whole life. The devoted.
+    </p>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- PRODUCTS -->
+  <section class="products-section">
+    <div class="products-header reveal">
+      <div>
+        <p class="products-label">The suite</p>
+        <p class="products-tagline">Not your typical case studies. These are unapologetically niche tools built for people who care too much.</p>
+      </div>
+      <span class="suite-live-badge">
+        <span class="suite-live-dot"></span>
+        Live
+      </span>
+    </div>
+    <div class="products-grid">
+
+      <div class="product-card reveal reveal-delay-1" data-product="predictor">
+        <span class="card-status-badge live"><span class="card-live-dot"></span>Live</span>
+        <div class="card-tag-row">
+          <span class="card-tag accent">Football</span>
+          <span class="card-tag">UX Design</span>
+          <span class="card-tag">Web App</span>
+        </div>
+        <p class="card-name">Boro Predictor</p>
+        <p class="card-subtitle">Season Score Predictor</p>
+        <p class="card-desc">Predict every Middlesbrough fixture before the season starts. Commit your belief, track your score, and see your season unfold before a ball is kicked.</p>
+        <div class="card-actions">
+          <a class="btn-visit" href="https://d4vidholly.github.io/Boro-Predictor-2526/landing/" target="_blank" rel="noopener">Visit <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 5.5h9M5.5 1l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="btn-case-study" href="moveclear-predictor.html">Case study</a>
+        </div>
+      </div>
+
+      <div class="product-card reveal reveal-delay-2" data-product="wembley">
+        <span class="card-status-badge live"><span class="card-live-dot"></span>Live</span>
+        <div class="card-tag-row">
+          <span class="card-tag accent">FA Cup</span>
+          <span class="card-tag">Front-End</span>
+          <span class="card-tag">Web App</span>
+        </div>
+        <p class="card-name">Wembley</p>
+        <p class="card-subtitle">FA Cup Board Game Companion</p>
+        <p class="card-desc">A browser companion to the classic Wembley board game. All the nostalgia, none of the lost dice. Move clear of every opponent on the road to the final.</p>
+        <div class="card-actions">
+          <a class="btn-visit" href="https://d4vidholly.github.io/wembley-game/" target="_blank" rel="noopener">Visit <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 5.5h9M5.5 1l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="btn-case-study" href="moveclear-wembley.html">Case study</a>
+        </div>
+      </div>
+
+      <div class="product-card reveal reveal-delay-3" data-product="tag">
+        <span class="card-status-badge live"><span class="card-live-dot"></span>Live</span>
+        <div class="card-tag-row">
+          <span class="card-tag accent">Running</span>
+          <span class="card-tag">UX Design</span>
+          <span class="card-tag">Data</span>
+        </div>
+        <p class="card-name">TAG Running</p>
+        <p class="card-subtitle">True Age Grading</p>
+        <p class="card-desc">Benchmarks your 5K time against local Parkrun course records — not world standards. Finally, a fair and honest read on where you actually stand.</p>
+        <div class="card-actions">
+          <a class="btn-visit" href="https://d4vidholly.github.io/TAG-running//" target="_blank" rel="noopener">Visit <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 5.5h9M5.5 1l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="btn-case-study" href="moveclear-tag.html">Case study</a>
+        </div>
+      </div>
+
+      <div class="product-card locked reveal reveal-delay-4" data-product="wnf">
+        <span class="card-status-badge coming-soon"><svg viewBox="0 0 11 13" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:10px;height:10px"><rect x="0.65" y="5.65" width="9.7" height="6.7" rx="1.65" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 5.5V3.5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Coming soon</span>
+        <div class="card-tag-row">
+          <span class="card-tag accent">Football</span>
+          <span class="card-tag">Product Design</span>
+          <span class="card-tag">Web App</span>
+        </div>
+        <p class="card-name">WNF Manager</p>
+        <p class="card-subtitle">Football Team Organiser</p>
+        <p class="card-desc">Builds fair, balanced teams for grassroots football from a player pool. Ratings, positions, and formation view — so the organiser can make the call with clarity.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <div class="section-divider"></div>
+  <section class="about-section">
+    <div class="reveal">
+      <p class="about-eyebrow">The maker</p>
+      <div class="about-layout">
+        <div class="about-text">
+          <h2 class="about-name">David Holly</h2>
+          <p class="about-title">Product Designer</p>
+          <p class="about-bio">UX and Product Designer who identifies problems worth solving and moves them all the way to shipped. The work here is sports-obsessed — the skills aren't. If you've got a community worth designing for, a process that deserves better than a spreadsheet, or an idea that's been sitting in your notes too long, I'm interested.</p>
+        </div>
+        <div class="about-ctas">
+          <a href="https://www.linkedin.com/in/davidhollydesign/" target="_blank" rel="noopener" class="about-cta">
+            LinkedIn
+            <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="mailto:davidhollyux@gmail.com" class="about-cta">
+            Get in touch
+            <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CODA -->
+  <div class="section-divider"></div>
+  <section class="coda">
+    <p class="coda-line reveal">
+      <span>See clear.</span> Move clear.
+    </p>
+    <p class="coda-byline reveal reveal-delay-2">
+      Move Clear Labs &mdash; a product studio by <a href="https://d4vidholly.github.io/" target="_blank" rel="noopener">DHD</a>
+    </p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="#"><img src="MC_round.png" alt="Move Clear" class="footer-mc-logo"></a>
+    <span class="footer-right">
+      <span>&copy; 2026 Move Clear Labs</span>
+      <a href="https://d4vidholly.github.io/" target="_blank" rel="noopener"><img src="DHD_logo.png" alt="DHD" class="footer-dhd"></a>
+    </span>
+  </footer>
+
+  <script>
+    // Nav scroll state
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);

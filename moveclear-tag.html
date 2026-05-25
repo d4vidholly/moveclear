@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TAG Running — Move Clear</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #09090E;
+      --bg-card:      #0F0F16;
+      --bg-card-hover:#141420;
+      --text:         #EEEEF0;
+      --text-muted:   rgba(238,238,240,0.45);
+      --text-dim:     rgba(238,238,240,0.18);
+      --blue:         #5AC8FA;
+      --border:       rgba(238,238,240,0.07);
+      --border-hover: rgba(238,238,240,0.14);
+      --radius:       14px;
+      --radius-lg:    20px;
+      --accent:       #C8FF47;
+      --accent-rgb:   200,255,71;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Instrument Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      transition: background 0.4s ease, border-color 0.4s ease;
+      border-bottom: 1px solid transparent;
+    }
+    nav.scrolled {
+      background: rgba(9,9,14,0.85);
+      border-color: var(--border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      transition: color 0.2s, opacity 0.2s;
+    }
+    .nav-back:hover { color: var(--text); opacity: 0.8; }
+    .nav-back svg { width: 14px; height: 14px; }
+    .nav-mc-logo { height: 22px; width: auto; display: block; }
+    .nav-wordmark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-wordmark .c { color: var(--blue); }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: 40px;
+      border: 1px solid rgba(var(--accent-rgb), 0.35);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .nav-cta:hover {
+      background: rgba(var(--accent-rgb), 0.08);
+      border-color: rgba(var(--accent-rgb), 0.6);
+    }
+
+    /* HERO */
+    .case-hero {
+      padding: 140px 24px 100px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .hero-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .tag {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 40px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .tag.accent {
+      color: var(--accent);
+      border-color: rgba(var(--accent-rgb), 0.3);
+      background: rgba(var(--accent-rgb), 0.06);
+    }
+    .hero-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(56px, 10vw, 112px);
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.1s forwards;
+    }
+    .hero-name span { color: var(--accent); }
+    .hero-subtitle {
+      margin-top: 20px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(18px, 2.8vw, 28px);
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.25s forwards;
+    }
+    .hero-intro {
+      margin-top: 28px;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      max-width: 620px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.4s forwards;
+    }
+    .hero-divider {
+      margin-top: 64px;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0.25;
+    }
+
+    /* HERO IMAGE */
+    .hero-image {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .hero-image img {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    /* CONTENT */
+    .content-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+    .section-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 48px;
+    }
+
+    /* CHALLENGE GRID */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .challenge-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .challenge-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0.4;
+    }
+    .challenge-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: rgba(var(--accent-rgb), 0.1);
+      line-height: 1;
+      margin-bottom: 16px;
+      letter-spacing: -0.04em;
+    }
+    .challenge-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .challenge-desc {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-muted);
+    }
+
+    /* APPROACH */
+    .approach-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .approach-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .approach-item:first-child { border-top: 1px solid var(--border); }
+    .approach-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--text-dim);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+    .approach-body {}
+    .approach-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .approach-desc {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text-muted);
+    }
+
+    /* FEATURES */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: 2px solid rgba(var(--accent-rgb), 0.5);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .feature-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .feature-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* NEXT STEPS */
+    .next-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .next-step {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .next-step:first-child { border-top: 1px solid var(--border); }
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+    .step-body {}
+    .step-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .step-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* CTA */
+    .case-cta {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 140px;
+      text-align: center;
+    }
+    .cta-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .cta-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 40px;
+      background: var(--accent);
+      color: #09090E;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+      letter-spacing: -0.01em;
+    }
+    .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .cta-btn svg { width: 16px; height: 16px; }
+
+    /* SECTION DIVIDER */
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      max-width: 900px;
+      margin: 0 auto 100px;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-left {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+    .footer-left .c { color: var(--blue); }
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .footer-dhd {
+      height: 22px;
+      width: auto;
+      opacity: 0.28;
+      transition: opacity 0.2s;
+    }
+    .footer-dhd:hover { opacity: 0.6; }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Chapter nav */
+    .chapter-nav { position: sticky; top: 60px; z-index: 90; background: rgba(9,9,14,0.88); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); opacity: 0; transform: translateY(-4px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
+    .chapter-nav.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .chapter-nav-inner { display: flex; overflow-x: auto; scrollbar-width: none; max-width: 920px; margin: 0 auto; padding: 0 24px; }
+    .chapter-nav-inner::-webkit-scrollbar { display: none; }
+    .chapter-nav-item { display: flex; align-items: center; padding: 13px 14px; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--text-dim); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; position: relative; top: 1px; flex-shrink: 0; }
+    .chapter-nav-item:hover { color: var(--text-muted); }
+    .chapter-nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Next project */
+    .next-project { border-top: 1px solid var(--border); padding: 36px 40px; display: flex; align-items: center; justify-content: space-between; }
+    .next-project-label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); }
+    .next-project-link { display: inline-flex; align-items: center; gap: 10px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); text-decoration: none; transition: color 0.2s; }
+    .next-project-link:hover { color: var(--accent); }
+    .next-project-link svg { width: 18px; height: 18px; transition: transform 0.2s; }
+    .next-project-link:hover svg { transform: translateX(4px); }
+
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; }
+      .challenge-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .approach-item { grid-template-columns: 56px 1fr; }
+      .approach-num { font-size: 44px; }
+      .next-project { padding: 28px 20px; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chapter-nav" id="chapter-nav">
+    <div class="chapter-nav-inner">
+      <a class="chapter-nav-item" href="#s-challenge">Challenge</a>
+      <a class="chapter-nav-item" href="#s-approach">Approach</a>
+      <a class="chapter-nav-item" href="#s-features">Features</a>
+      <a class="chapter-nav-item" href="#s-next">Roadmap</a>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="index.html" class="nav-back">
+      <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13 7H1M7 13l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <img src="moveclear_logo.png" alt="Move Clear" class="nav-mc-logo">
+    </a>
+    <a href="https://d4vidholly.github.io/TAG-running//" target="_blank" rel="noopener" class="nav-cta">
+      Try TAG Running
+      <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="case-hero">
+    <div class="hero-tags">
+      <span class="tag accent">Running</span>
+      <span class="tag">Age Grading</span>
+      <span class="tag">Data</span>
+      <span class="tag">Parkrun</span>
+    </div>
+    <h1 class="hero-name">TAG <span>Running</span></h1>
+    <p class="hero-subtitle">True Age Grading for the devoted runner.</p>
+    <p class="hero-intro">Standard age grading compares you to world records — an impossibly high bar that leaves most runners feeling like they're failing. TAG Running takes a different approach: benchmark yourself against your local Parkrun course records instead. Finally, a fair and honest read on where you actually stand.</p>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- HERO IMAGE -->
+  <div class="hero-image">
+    <img src="https://d4vidholly.github.io/Segflow/assets/tag-running-hero.png" alt="TAG Running interface" loading="lazy">
+  </div>
+
+  <!-- CHALLENGES -->
+  <section class="content-section" id="s-challenge">
+    <p class="section-eyebrow reveal">The challenge</p>
+    <h2 class="section-heading reveal">What wasn't working.</h2>
+    <div class="challenge-grid">
+      <div class="challenge-card reveal reveal-delay-1">
+        <p class="challenge-num">01</p>
+        <p class="challenge-title">World records as the benchmark</p>
+        <p class="challenge-desc">Traditional age grading tables compare runners to world-record pace. For recreational runners, this produces scores so low they feel meaningless — and discouraging.</p>
+      </div>
+      <div class="challenge-card reveal reveal-delay-2">
+        <p class="challenge-num">02</p>
+        <p class="challenge-title">No local context</p>
+        <p class="challenge-desc">Every Parkrun course is different. Hills, terrain, altitude — they all affect times. A runner on a hilly course was being judged against the same standard as someone on a flat one.</p>
+      </div>
+      <div class="challenge-card reveal reveal-delay-3">
+        <p class="challenge-num">03</p>
+        <p class="challenge-title">Opaque scoring</p>
+        <p class="challenge-desc">Most grading tools give you a percentage with no explanation. Runners had no way to understand what the number meant, how to improve, or whether their progress was real.</p>
+      </div>
+      <div class="challenge-card reveal reveal-delay-4">
+        <p class="challenge-num">04</p>
+        <p class="challenge-title">Scattered data</p>
+        <p class="challenge-desc">Course records lived on individual Parkrun pages. There was no tool that aggregated them into a single, usable reference for genuine local benchmarking.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPROACH -->
+  <section class="content-section" id="s-approach">
+    <p class="section-eyebrow reveal">The approach</p>
+    <h2 class="section-heading reveal">How I built it.</h2>
+    <div class="approach-list">
+      <div class="approach-item reveal">
+        <p class="approach-num">1</p>
+        <div class="approach-body">
+          <p class="approach-title">Redefine the benchmark</p>
+          <p class="approach-desc">Instead of world records, TAG uses each course's own age-category records as the reference point. Your 5K is graded against the best that's been run at your specific venue — a standard that's ambitious but real.</p>
+        </div>
+      </div>
+      <div class="approach-item reveal reveal-delay-1">
+        <p class="approach-num">2</p>
+        <div class="approach-body">
+          <p class="approach-title">Course record aggregation</p>
+          <p class="approach-desc">Course records are scraped and maintained across UK Parkrun venues, giving the grading engine a live, local reference database rather than static global tables.</p>
+        </div>
+      </div>
+      <div class="approach-item reveal reveal-delay-2">
+        <p class="approach-num">3</p>
+        <div class="approach-body">
+          <p class="approach-title">Clean, readable output</p>
+          <p class="approach-desc">The interface is built around a single clear result. Runners get a grade, a context sentence, and a visual — not a wall of numbers. The score means something because the benchmark means something.</p>
+        </div>
+      </div>
+      <div class="approach-item reveal reveal-delay-3">
+        <p class="approach-num">4</p>
+        <div class="approach-body">
+          <p class="approach-title">No login, no friction</p>
+          <p class="approach-desc">Enter your time, your age, your course. That's it. TAG Running is deliberately low-friction — a tool you reach for on a Saturday morning without thinking, not a platform that demands your data first.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="content-section" id="s-features">
+    <p class="section-eyebrow reveal">What's in it</p>
+    <h2 class="section-heading reveal">Key features.</h2>
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1">
+        <p class="feature-title">Local course benchmarking</p>
+        <p class="feature-desc">Grading against your specific Parkrun venue's age-category records — not global averages or world standards.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <p class="feature-title">All age categories</p>
+        <p class="feature-desc">Full coverage across male and female age groups, from juniors through to seniors. Every runner gets a relevant grade.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <p class="feature-title">Instant results</p>
+        <p class="feature-desc">No account, no login, no waiting. Input your run and get your grade in seconds — built for the post-run car park.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-4">
+        <p class="feature-title">Contextual scoring</p>
+        <p class="feature-desc">Your grade comes with a plain-language interpretation — so you always know what the number actually means in terms of your running.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- NEXT STEPS -->
+  <section class="content-section" id="s-next">
+    <p class="section-eyebrow reveal">What's next</p>
+    <h2 class="section-heading reveal">On the roadmap.</h2>
+    <div class="next-steps">
+      <div class="next-step reveal reveal-delay-1">
+        <div class="step-dot"></div>
+        <div class="step-body">
+          <p class="step-title">Personal history tracking</p>
+          <p class="step-desc">Save and compare grades across multiple runs to track genuine improvement over time — not just raw times, but graded performance.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-2">
+        <div class="step-dot"></div>
+        <div class="step-body">
+          <p class="step-title">Course comparison</p>
+          <p class="step-desc">Compare your graded performance across different venues — useful for runners who travel to events or run multiple weekly Parkruns.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-3">
+        <div class="step-dot"></div>
+        <div class="step-body">
+          <p class="step-title">Volunteer & milestone recognition</p>
+          <p class="step-desc">Integrate with Parkrun's milestone system to surface relevant context about a runner's participation — not just their speed.</p>
+        </div>
+      </div>
+      <div class="next-step rev

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wembley — Move Clear</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #09090E;
+      --bg-card:      #0F0F16;
+      --text:         #EEEEF0;
+      --text-muted:   rgba(238,238,240,0.45);
+      --text-dim:     rgba(238,238,240,0.18);
+      --blue:         #5AC8FA;
+      --border:       rgba(238,238,240,0.07);
+      --radius:       14px;
+      --radius-lg:    20px;
+      --accent:       #34C759;
+      --accent-rgb:   52,199,89;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Instrument Sans', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; transition: background 0.4s ease, border-color 0.4s ease; border-bottom: 1px solid transparent; }
+    nav.scrolled { background: rgba(9,9,14,0.85); border-color: var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .nav-back { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-muted); font-size: 13px; transition: color 0.2s, opacity 0.2s; }
+    .nav-back:hover { color: var(--text); opacity: 0.8; }
+    .nav-back svg { width: 14px; height: 14px; }
+    .nav-mc-logo { height: 22px; width: auto; display: block; }
+    .nav-cta { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 40px; border: 1px solid rgba(var(--accent-rgb), 0.35); color: var(--accent); font-size: 12px; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+    .nav-cta:hover { background: rgba(var(--accent-rgb), 0.08); border-color: rgba(var(--accent-rgb), 0.6); }
+    .nav-cta svg { width: 12px; height: 12px; }
+
+    .case-hero { padding: 140px 24px 80px; max-width: 900px; margin: 0 auto; }
+    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+    .tag { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 12px; border-radius: 40px; border: 1px solid var(--border); color: var(--text-muted); }
+    .tag.accent { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.3); background: rgba(var(--accent-rgb), 0.06); }
+    .hero-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(64px, 12vw, 140px); font-weight: 800; line-height: 0.92; letter-spacing: -0.04em; color: var(--text); opacity: 0; animation: fadeUp 0.9s ease 0.1s forwards; }
+    .hero-name span { color: var(--accent); }
+    .hero-subtitle { margin-top: 20px; font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(18px, 2.8vw, 28px); font-weight: 300; color: var(--text-muted); letter-spacing: -0.02em; opacity: 0; animation: fadeUp 0.9s ease 0.25s forwards; }
+    .hero-intro { margin-top: 28px; font-size: 17px; line-height: 1.65; color: var(--text-muted); max-width: 620px; opacity: 0; animation: fadeUp 0.9s ease 0.4s forwards; }
+    .hero-meta { display: flex; gap: 40px; flex-wrap: wrap; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); opacity: 0; animation: fadeUp 0.9s ease 0.55s forwards; }
+    .hero-meta-label { font-size: 10px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+    .hero-meta-value { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+    .hero-divider { margin-top: 64px; width: 100%; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0.25; }
+
+    .hero-image { max-width: 1080px; margin: 0 auto; padding: 0 24px 48px; }
+    .hero-image img { width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--border); display: block; }
+
+    .inline-image { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+    .inline-image img { width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--border); display: block; }
+    .inline-image figcaption { margin-top: 12px; font-size: 12px; color: var(--text-dim); text-align: center; letter-spacing: 0.02em; }
+
+    .image-grid { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .image-grid figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .image-grid img { width: 100%; display: block; }
+    .image-grid figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
+
+    .content-section { max-width: 900px; margin: 0 auto; padding: 0 24px 100px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; }
+    .section-heading { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--text); margin-bottom: 48px; }
+    .section-intro { font-size: 16px; line-height: 1.7; color: var(--text-muted); max-width: 640px; margin-bottom: 40px; margin-top: -24px; }
+
+    /* Decision callout */
+    .decision-callout { margin-top: 20px; padding: 18px 22px; background: rgba(var(--accent-rgb), 0.04); border: 1px solid rgba(var(--accent-rgb), 0.15); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; }
+    .decision-callout-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .decision-callout-text { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+
+    /* Research quotes */
+    .research-quotes { margin-top: 40px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .research-quote { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid rgba(var(--accent-rgb), 0.4); border-radius: var(--radius); padding: 24px 28px; }
+    .research-quote-text { font-size: 14px; line-height: 1.65; color: var(--text-muted); font-style: italic; margin-bottom: 14px; }
+    .research-quote-text::before { content: '\201C'; }
+    .research-quote-text::after  { content: '\201D'; }
+    .research-quote-source { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+    .research-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-top: 48px; margin-bottom: 20px; }
+
+    /* Discovery */
+    .discovery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .discovery-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; }
+    .discovery-icon { font-size: 22px; margin-bottom: 16px; }
+    .discovery-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
+    .discovery-desc { font-size: 14px; line-height: 1.65; color: var(--text-muted); }
+
+    /* Opportunity */
+    .opportunity-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .opportunity-item { padding: 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); position: relative; overflow: hidden; }
+    .opportunity-item::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0.35; }
+    .opportunity-icon { font-size: 20px; margin-bottom: 14px; }
+    .opportunity-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 8px; }
+    .opportunity-desc { font-size: 13px; line-height: 1.65; color: var(--text-muted); }
+
+    /* Approach */
+    .approach-list { display: flex; flex-direction: column; }
+    .approach-item { display: grid; grid-template-columns: 80px 1fr; gap: 24px; padding: 48px 0; border-bottom: 1px solid var(--border); }
+    .approach-item:first-child { border-top: 1px solid var(--border); }
+    .approach-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: 64px; font-weight: 800; color: var(--text-dim); line-height: 1; letter-spacing: -0.05em; }
+    .approach-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
+    .approach-desc { font-size: 15px; line-height: 1.65; color: var(--text-muted); }
+    .approach-visuals { margin-top: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .approach-visuals figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .approach-visuals img { width: 100%; display: block; }
+    .approach-visuals figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); letter-spacing: 0.02em; }
+    .approach-visual-full { margin-top: 12px; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .approach-visual-full img { width: 100%; display: block; }
+    .approach-visual-full figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); letter-spacing: 0.02em; }
+
+    /* Testing / Penalty */
+    .penalty-story { font-size: 15px; line-height: 1.7; color: var(--text-muted); margin-bottom: 40px; }
+    .penalty-progression { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .penalty-step { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .penalty-step img { width: 100%; display: block; }
+    .penalty-step-caption { padding: 12px 16px; background: var(--bg-card); border-top: 1px solid var(--border); }
+    .penalty-step-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+    .penalty-step-desc { font-size: 13px; line-height: 1.5; color: var(--text-muted); }
+
+    /* Subsection */
+    .subsection-label { font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .subsection-spacer { margin-top: 60px; }
+
+    /* Cup Heroes */
+    .heroes-intro { background: var(--bg-card); border: 1px solid var(--border); border-top: 2px solid rgba(var(--accent-rgb), 0.5); border-radius: var(--radius-lg); padding: 36px; margin-bottom: 16px; }
+    .heroes-intro-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
+    .heroes-intro-desc { font-size: 15px; line-height: 1.7; color: var(--text-muted); }
+    .heroes-mechanics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+    .mechanic-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .mechanic-icon { font-size: 22px; margin-bottom: 12px; }
+    .mechanic-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 8px; }
+    .mechanic-desc { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+    .mechanic-wip { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); background: rgba(var(--accent-rgb), 0.08); border: 1px solid rgba(var(--accent-rgb), 0.2); border-radius: 20px; padding: 3px 10px; }
+
+    /* UI section */
+    .ui-panel { background: var(--bg-card); border: 1px solid var(--border); border-top: 2px solid rgba(var(--accent-rgb), 0.4); border-radius: var(--radius-lg); padding: 36px; }
+    .ui-panel-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
+    .ui-panel-desc { font-size: 15px; line-height: 1.7; color: var(--text-muted); }
+    .ui-attribution { margin-top: 12px; font-size: 12px; color: var(--text-dim); }
+    .ui-attribution a { color: var(--accent); text-decoration: none; opacity: 0.8; }
+    .ui-attribution a:hover { opacity: 1; }
+    .skins-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+    .skins-grid figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .skins-grid img { width: 100%; display: block; }
+    .skins-grid figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
+    .logo-pair { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+    .logo-pair figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .logo-pair img { width: 100%; display: block; aspect-ratio: 1; object-fit: cover; background: #1a1a1a; }
+    .logo-pair figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
+
+    /* Quotes */
+    .quotes-list { display: flex; flex-direction: column; gap: 16px; }
+    .quote-block { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 28px 32px; }
+    .quote-text { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(17px, 2.2vw, 22px); font-weight: 300; line-height: 1.45; letter-spacing: -0.02em; color: var(--text); margin-bottom: 16px; }
+    .quote-text::before { content: '\201C'; }
+    .quote-text::after  { content: '\201D'; }
+    .quote-author { font-size: 12px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* Reflections */
+    .reflection-list { display: flex; flex-direction: column; }
+    .reflection-item { display: grid; grid-template-columns: 44px 1fr; gap: 20px; padding: 36px 0; border-bottom: 1px solid var(--border); }
+    .reflection-item:first-child { border-top: 1px solid var(--border); }
+    .reflection-marker { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: var(--text-dim); line-height: 1.3; }
+    .reflection-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 8px; }
+    .reflection-desc { font-size: 15px; line-height: 1.65; color: var(--text-muted); }
+
+    /* Next steps */
+    .next-steps { display: flex; flex-direction: column; }
+    .next-step { display: flex; gap: 20px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid var(--border); }
+    .next-step:first-child { border-top: 1px solid var(--border); }
+    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 7px; flex-shrink: 0; }
+    .step-dot.wip { background: rgba(var(--accent-rgb), 0.4); border: 1px solid var(--accent); }
+    .step-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+    .step-desc { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+
+    .section-divider { width: 100%; height: 1px; background: var(--border); max-width: 900px; margin: 0 auto 100px; }
+
+    .case-cta { max-width: 900px; margin: 0 auto; padding: 0 24px 140px; text-align: center; }
+    .cta-heading { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(32px, 5vw, 56px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--text); margin-bottom: 20px; }
+    .cta-sub { font-size: 16px; color: var(--text-muted); margin-bottom: 40px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border-radius: 40px; background: var(--accent); color: #09090E; font-size: 15px; font-weight: 600; text-decoration: none; transition: opacity 0.2s, transform 0.2s; letter-spacing: -0.01em; }
+    .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .cta-btn svg { width: 16px; height: 16px; }
+
+    footer { border-top: 1px solid var(--border); padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-left { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.03em; }
+    .footer-left .c { color: var(--blue); }
+    .footer-right { display: flex; align-items: center; gap: 20px; font-size: 12px; color: var(--text-dim); letter-spacing: 0.02em; }
+    .footer-dhd { height: 22px; width: auto; opacity: 0.28; transition: opacity 0.2s; }
+    .footer-dhd:hover { opacity: 0.6; }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 860px) {
+      .opportunity-list { grid-template-columns: repeat(2, 1fr); }
+    }
+    /* Chapter nav */
+    .chapter-nav { position: sticky; top: 60px; z-index: 90; background: rgba(9,9,14,0.88); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); opacity: 0; transform: translateY(-4px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
+    .chapter-nav.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .chapter-nav-inner { display: flex; overflow-x: auto; scrollbar-width: none; max-width: 920px; margin: 0 auto; padding: 0 24px; }
+    .chapter-nav-inner::-webkit-scrollbar { display: none; }
+    .chapter-nav-item { display: flex; align-items: center; padding: 13px 14px; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--text-dim); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; position: relative; top: 1px; flex-shrink: 0; }
+    .chapter-nav-item:hover { color: var(--text-muted); }
+    .chapter-nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Next project */
+    .next-project { border-top: 1px solid var(--border); padding: 36px 40px; display: flex; align-items: center; justify-content: space-between; max-width: 100%; }
+    .next-project-label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); }
+    .next-project-link { display: inline-flex; align-items: center; gap: 10px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); text-decoration: none; transition: color 0.2s; }
+    .next-project-link:hover { color: var(--accent); }
+    .next-project-link svg { width: 18px; height: 18px; transition: transform 0.2s; }
+    .next-project-link:hover svg { transform: translateX(4px); }
+
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; }
+      .discovery-grid, .research-quotes, .opportunity-list, .approach-visuals,
+      .penalty-progression, .heroes-mechanics, .skins-grid, .logo-pair, .image-grid { grid-template-columns: 1fr; }
+      .approach-item { grid-template-columns: 56px 1fr; }
+      .approach-num { font-size: 44px; }
+      .reflection-item { grid-template-columns: 32px 1fr; }
+      .next-project { padding: 28px 20px; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SECTION NAV -->
+  <div class="chapter-nav" id="chapter-nav">
+    <div class="chapter-nav-inner">
+      <a class="chapter-nav-item" href="#s-discovery">Discovery</a>
+      <a class="chapter-nav-item" href="#s-opportunity">Opportunity</a>
+      <a class="chapter-nav-item" href="#s-decisions">Decisions</a>
+      <a class="chapter-nav-item" href="#s-testing">Testing</a>
+      <a class="chapter-nav-item" href="#s-nice-touches">Nice Touches</a>
+      <a class="chapter-nav-item" href="#s-quotes">Players</a>
+      <a class="chapter-nav-item" href="#s-reflections">Reflections</a>
+      <a class="chapter-nav-item" href="#s-next">Next Steps</a>
+    </div>
+  </div>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-back">
+      <svg viewBox="0 0 14 14" fill="none"><path d="M13 7H1M7 13l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <img src="moveclear_logo.png" alt="Move Clear" class="nav-mc-logo">
+    </a>
+    <a href="https://d4vidholly.github.io/Wembley/" target="_blank" rel="noopener" class="nav-cta">
+      Play Wembley
+      <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="case-hero">
+    <div class="hero-tags">
+      <span class="tag accent">UX Design</span>
+      <span class="tag">Product Design</span>
+      <span class="tag">Front-End</span>
+      <span class="tag">Self-Initiated</span>
+    </div>
+    <h1 class="hero-name"><span>Wembley</span></h1>
+    <p class="hero-subtitle">Bringing the Game to Life</p>
+    <p class="hero-intro">The Wembley board game has been on kitchen tables since the 1970s. Playing it again as an adult — and then finding forums full of people asking for dice probabilities, rules half-remembered, ways to keep playing when the box was broken — made the problem clear. This is its digital companion: faithful to the original mechanics, freed from the box, and built from scratch by one person across design, product, and code.</p>
+    <div class="hero-meta">
+      <div>
+        <p class="hero-meta-label">Role</p>
+        <p class="hero-meta-value">Full Stack Product Designer</p>
+      </div>
+      <div>
+        <p class="hero-meta-label">Type</p>
+        <p class="hero-meta-value">Solo / Self-initiated</p>
+      </div>
+      <div>
+        <p class="hero-meta-label">Platform</p>
+        <p class="hero-meta-value">Web app</p>
+      </div>
+      <div>
+        <p class="hero-meta-label">Status</p>
+        <p class="hero-meta-value">Live</p>
+      </div>
+    </div>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- HERO IMAGE -->
+  <div class="hero-image">
+    <img src="wembley-assets/wembley_hero.png" alt="Wembley — match setup screen" loading="lazy">
+  </div>
+
+  <!-- DISCOVERY -->
+  <section class="content-section" id="s-discovery">
+    <p class="section-eyebrow reveal">Discovery</p>
+    <h2 class="section-heading reveal">How the problem was found.</h2>
+    <div class="discovery-grid">
+      <div class="discovery-card reveal reveal-delay-1">
+        <p class="discovery-icon">🎲</p>
+        <p class="discovery-title">Around the table</p>
+        <p class="discovery-desc">Playing the game with others made the friction immediate. Prize money had to be physically handed out for gate receipts and match winnings. When a goal was scored, someone rolled three separate dice and added additional goals by hand. Every time things got exciting — a cup upset, a late equaliser — the game had to pause while someone totted up the numbers. "You've forgotten to add my goal." "Who owes who for the gate?" The game was good. The overhead was killing it.</p>
+      </div>
+      <div class="discovery-card reveal reveal-delay-2">
+        <p class="discovery-icon">💬</p>
+        <p class="discovery-title">Forum research</p>
+        <p class="discovery-desc">Searching online surfaced a consistent pattern: forums and review threads full of people asking for dice probabilities, requesting digital versions, and sharing workarounds for broken or incomplete sets. The demand for a faithful digital companion was real — it just didn't exist yet.</p>
+      </div>
+    </div>
+    <p class="research-eyebrow reveal">What the forums said</p>
+    <div class="research-quotes">
+      <div class="research-quote reveal reveal-delay-1">
+        <p class="research-quote-text">Just found the game and want to play it with the family at Christmas. I've lost the dice. I would like to recreate them so I can play, but I can't find them anywhere on the web.</p>
+        <p class="research-quote-source">Forum post — Board Game Geek</p>
+      </div>
+      <div class="research-quote reveal reveal-delay-2">
+        <p class="research-quote-text">I picked up a copy of this classic in a charity shop — it's in great condition, but no rules. Can anyone point me in the direction of some?</p>
+        <p class="research-quote-source">Forum post — Board Game Geek</p>
+      </div>
+      <div class="research-quote reveal reveal-delay-3">
+        <p class="research-quote-text">The dice are poorly weighted and it needs updating properly rather than just a reprint. And yet, I love it.</p>
+        <p class="research-quote-source">Review — Board Game Geek</p>
+      </div>
+      <div class="research-quote reveal reveal-delay-4">
+        <p class="research-quote-text">Played with the right crowd this can become an incredibly fun experience with memorable stand-up-and-cheer moments. The theme gives it a real boost.</p>
+        <p class="research-quote-source">Review — Board Game Geek</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE OPPORTUNITY -->
+  <section class="content-section" id="s-opportunity">
+    <p class="section-eyebrow reveal">The opportunity</p>
+    <h2 class="section-heading reveal">What it needed to be.</h2>
+    <p class="section-intro reveal">Not a replacement — a companion. One that handles everything the physical game can't, and bridges two audiences at once: younger fans who consume sport digitally and might never have discovered the board game, and the generation who grew up with it but found the overhead getting in the way.</p>
+    <div class="opportunity-list">
+      <div class="opportunity-item reveal reveal-delay-1">
+        <p class="opportunity-icon">⚙️</p>
+        <p class="opportunity-title">The logic, built in</p>
+        <p class="opportunity-desc">Dice probabilities, prize money, scoring rules, and progression all handled automatically. No dice to roll, no cash to hand out, nothing to argue about.</p>
+      </div>
+      <div class="opportunity-item reveal reveal-delay-2">
+        <p class="opportunity-icon">📺</p>
+        <p class="opportunity-title">The atmosphere</p>
+        <p class="opportunity-desc">Chronologically: weighing up pre-match selections, waiting for the result, the tension of a penalty shootout if it ends in a draw. Not just a tool — an occasion that feels like the real thing.</p>
+      </div>
+      <div class="opportunity-item reveal reveal-delay-3">
+        <p class="opportunity-icon">🏟️</p>
+        <p class="opportunity-title">Built to grow</p>
+        <p class="opportunity-desc">New teams, new editions, rule variants. A Retro skin for older fans who remember a different version of the game; new digital skins for those who've never owned the box. Quality-of-life improvements the physical game never could.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOARD GAME IMAGE -->
+  <div class="inline-image">
+    <figure>
+      <img src="wembley-assets/wembley_box.png" alt="The Wembley board game" loading="lazy">
+      <figcaption>The 2016 Gibsons edition — the reference the digital companion is built on</figcaption>
+    </figure>
+  </div>
+
+  <!-- APPROACH -->
+  <section class="content-section" id="s-decisions">
+    <p class="section-eyebrow reveal">Decisions that shaped it</p>
+    <h2 class="section-heading reveal">Three things that mattered most.</h2>
+    <div class="approach-list">
+
+      <div class="approach-item reveal">
+        <p class="approach-num">1</p>
+        <div>
+          <p class="approach-title">Layout and information hierarchy</p>
+          <p class="approach-desc">The wireframes started on paper before moving into Figma — mapping the user flow from load screen through team selection, round selection, and match play. These were the core features, and early testing focused on how players would find and select their team. The card format — two opposing team panels with badge, division, stadium, and Cup Heroes visible at a glance — came from studying the FIFA team select screen. That layout puts both sides in front of the player simultaneously, making the matchup feel like an event before a ball is kicked.</p>
+          <div class="approach-visuals">
+            <figure>
+              <img src="wembley-load-screen.png" alt="Early v1 UI" loading="lazy">
+              <figcaption>v1 — functional, no identity</figcaption>
+            </figure>
+            <figure>
+              <img src="wembley-assets/wembley_select.jpg" alt="FIFA team select — reference" loading="lazy">
+              <figcaption>FIFA reference — card layout for team matchups</figcaption>
+            </figure>
+          </div>
+          <div class="approach-visual-full">
+            <figure>
+              <img src="wembley-assets/wembley_wireframes.png" alt="Figma wireframes" loading="lazy">
+              <figcaption style="padding:10px 14px;font-size:12px;color:var(--text-dim);background:var(--bg-card);border-top:1px solid var(--border);">Figma wireframes — mapping the flow before building</figcaption>
+            </figure>
+          </div>
+          <div class="decision-callout">
+            <p class="decision-callout-label">Design note</p>
+            <p class="decision-callout-text">Football fans know the home team is always shown first (left) — but for a family board game with mixed audiences, more information was needed. Star ratings were introduced to help visualise divisions at a glance, giving casual players the same instinct a football fan already has.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="approach-item reveal reveal-delay-1">
+        <p class="approach-num">2</p>
+        <div>
+          <p class="approach-title">The team select dropdown</p>
+          <p class="approach-desc">The game has 32 teams. The question was how players should find theirs. Three options: scroll through a visual badge grid, a free-text search, or a dropdown list. The decision was a dropdown sorted alphabetically by team name. Players know who they support — the team name, not the league. FIFA scrolls through teams horizontally on a controller, which works at roughly 20 international sides. At 32 English clubs in a browser, that approach becomes slow and fatiguing. A searchable alphabetical dropdown gets players to their club in two taps, without needing to know which division they play in.</p>
+          <div class="decision-callout">
+            <p class="decision-callout-label">The decision</p>
+            <p class="decision-callout-text">FIFA's L–R team scroll works for ~20 sides on a controller. At 32 clubs in a browser, it's too slow. A dropdown sorted by team name gets players to their club in two taps — because players know who they support, not what division they're in.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="approach-item reveal reveal-delay-2">
+        <p class="approach-num">3</p>
+        <div>
+          <p class="approach-title">Moving the data out of the codebase</p>
+          <p class="approach-desc">The app is built in vanilla HTML, CSS, and JavaScript — no frameworks, just the browser. In the first version, all 32 teams and their data (name, division, stadium, star rating, badge path) were hardcoded directly into a JavaScript object. It worked, but the file grew heavy, load times suffered, and any update to a team's data meant editing the application code. The fix was to move the full dataset to a Google Sheets spreadsheet, fetched on page load via the Sheets API. The JS file shrank significantly, load times improved, and team data can now be edited in a spreadsheet without touching a line of code.</p>
+          <div class="decision-callout">
+            <p class="decision-callout-label">The decision</p>
+            <p class="decision-callout-text">Removing the hardcoded dataset meant any update — a new rating, a renamed club, adding a team — could be made in a spreadsheet without touching the application. The accepted trade-offs: a network request on every page load adds latency, and the app now depends on Google's API staying available. Mitigated by setting the Sheet to read-only, which removes the edit-access risk. For a project at this scale, the maintainability gain outweighs the dependency.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MATCH SCREENSHOTS -->
+  <div class="image-grid reveal">
+    <figure>
+      <img src="wembley-assets/Screenshot%202026-05-25%20103708.png" alt="Classic skin — match setup" loading="lazy">
+      <figcaption>Classic 2016 skin — green pitch, faithful to the board game</figcaption>
+    </figure>
+    <figure>
+      <img src="wembley-assets/Screenshot%202026-05-25%20103800.png" alt="Sky skin — match setup" loading="lazy">
+      <figcaption>Sky skin — dark blue, vidiprinter era</figcaption>
+    </figure>
+  </div>
+
+  <div class="inline-image">
+    <figure>
+      <img src="wembley-assets/Screenshot%202026-05-25%20103855.png" alt="Match report" loading="lazy">
+      <figcaption>Match report — every result gets the full treatment</figcaption>
+    </figure>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- TESTING -->
+  <section class="content-section" id="s-testing">
+    <p class="section-eyebrow reveal">Testing</p>
+    <h2 class="section-heading reveal">The penalty shootout.</h2>
+    <p class="penalty-story reveal">The original Wembley board game resolves drawn matches with a coin toss. Simple — but a penalty shootout is the most dramatic moment in football, and a coin flip felt like a missed opportunity. The decision to redesign it went through four iterations before it was right.</p>
+    <div class="penalty-progression">
+      <div class="penalty-step reveal reveal-delay-1">
+        <img src="wembley-assets/Screenshot%202026-05-25%20103938.png" alt="Match report with penalty trigger" loading="lazy">
+        <div class="penalty-step-caption">
+          <p class="penalty-step-label">v1 — The trigger</p>
+          <p class="penalty-step-desc">The match report shows the draw after 90 minutes and a "Start Penalty Shoot Out" button — replacing the original coin toss rule entirely.</p>
+        </div>
+      </div>
+      <div class="penalty-step reveal reveal-delay-2">
+        <img src="wembley-assets/Screenshot%202026-05-25%20103946.png" alt="Penalty shootout — circles starting" loading="lazy">
+        <div class="penalty-step-caption">
+          <p class="penalty-step-label">v2 — Live circles</p>
+          <p class="penalty-step-desc">Redesigned as a live sequence: two columns of five circles, one per kick, filling in progressively. A scoring bug was found and fixed during this build.</p>
+        </div>
+      </div>
+      <div class="penalty-step reveal reveal-delay-3">
+        <img src="wembley-assets/Screenshot%202026-05-25%20103953.png" alt="Penalty shootout — white circles" loading="lazy">
+        <div class="penalty-step-caption">
+          <p class="penalty-step-label">v3 — The problem</p>
+          <p class="penalty-step-desc">White circles for goals looked identical for both teams regardless of club colours. The information wasn't there to read the shootout at a glance.</p>
+        </div>
+      </div>
+      <div class="penalty-step reveal reveal-delay-4">
+        <img src="wembley-assets/Screenshot%202026-05-25%20103958.png" alt="Penalty shootout — team colours" loading="lazy">
+        <div class="penalty-step-caption">
+          <p class="penalty-step-label">v4 — Fixed</p>
+          <p class="penalty-step-desc">Team colours applied per circle, plus "Scored" and "Missed" labels added. Each kick now reads as a clear result — the version that shipped.</p>
+        </div>
+      </div>
+    </div>
+    <div class="decision-callout reveal" style="margin-top:24px;">
+      <p class="decision-callout-label">The detail</p>
+      <p class="decision-callout-text">OPTA data suggests 80% of penalties are scored in professional football. Matching each kick to that same probability means all possible shootout outcomes — from 5–0 to sudden-death — are genuinely in play, rather than penalties feeling like a formality or reusing predetermined patterns.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- NICE TOUCHES -->
+  <section class="content-section" id="s-nice-touches">
+    <p class="section-eyebrow reveal">Nice touches</p>
+    <h2 class="section-heading reveal">The details that make it feel real.</h2>
+
+    <!-- Cup Heroes -->
+    <p class="subsection-label reveal">Cup Heroes</p>
+    <p class="section-intro reveal" style="margin-top:0">The original board game had nameless coloured tokens — a green one for a striker, a yellow one for a defender. Each one guaranteed to deliver. The redesign gave them names, faces, and doubt.</p>
+
+    <div class="heroes-intro reveal">
+      <p class="heroes-intro-title">From tokens to characters</p>
+      <p class="heroes-intro-desc">In the physical game, International Stars were guaranteed: if you played a star striker, they added a goal, every time. That certainty was also the problem — in a game with star-heavy teams, you could guarantee a 3-goal advantage before a die was rolled, which broke the balance entirely. The digital redesign kept the token concept but introduced probability and personality. Now you choose Ashley Cole when you need a serial winner at the back. You pick Steven Gerrard for the big moments. Still a token mechanic — but one with stakes, character, and a reason to care about who you select. Each player is individually illustrated in a hand-drawn Roy of the Rovers comic style.</p>
+    </div>
+
+    <div class="heroes-mechanics">
+      <div class="mechanic-card reveal reveal-delay-1">
+        <p class="mechanic-icon">⚽</p>
+        <p class="mechanic-title">Role differentiation</p>
+        <p class="mechanic-desc">Strikers add goals. Goalkeepers and defenders reduce the opposition's score instead — more faithful to how those positions actually affect a match.</p>
+      </div>
+      <div class="mechanic-card reveal reveal-delay-2">
+        <p class="mechanic-icon">🎲</p>
+        <p class="mechanic-title">80% probability</p>
+        <p class="mechanic-desc">The original stars were guaranteed — which let heavy-star teams dominate by design. 80% gives enough assurance that the selection matters, while keeping football's fundamental truth: anything can happen.</p>
+      </div>
+      <div class="mechanic-card reveal reveal-delay-3">
+        <p class="mechanic-icon">✦</p>
+        <p class="mechanic-title">Hidden secondary bonuses</p>
+        <p class="mechanic-desc">Additional effects tied to specific players — not listed upfront. Discovered through play. 5 live now, 12 planned to match the physical token count.</p>
+        <span class="mechanic-wip">In development</span>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <figure style="border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;">
+        <img src="wembley-assets/Screenshot%202026-05-25%20103827.png" alt="Cup Heroes selection modal" loading="lazy" style="width:100%;display:block;">
+        <figcaption style="padding:12px 16px;font-size:12px;color:var(--text-dim);background:var(--bg-card);border-top:1px solid var(--border);">Cup Heroes modal — hand-drawn illustrations in a Roy of the Rovers style. Locked cards unlock through play.</figcaption>
+      </figure>
+    </div>
+
+    <div class="decision-callout reveal" style="margin-top:16px;">
+      <p class="decision-callout-label">How discovery works</p>
+      <p class="decision-callout-text">Secondary bonuses aren't listed in the UI — they're found by playing. Didier Drogba has a 100% chance to score whenever he plays at Wembley, referencing his 4 goals in 4 finals. You don't know that when you pick him. You find out when the unique score event appears. Dave Beasant saves a penalty for an underdog team at Wembley. Steven Gerrard has a 20% chance to save his team from a loss. Ashley Cole's secondary is a guaranteed contribution — dependable, as advertised. Each bonus is grounded in the player's real Wembley history, which means discovering them feels like recognition rather than reward.</p>
+    </div>
+
+    <!-- UI: Badges, Skins, Logo -->
+    <div class="subsection-spacer"></div>
+    <p class="subsection-label reveal">UI — Badges, Skins &amp; Logo</p>
+    <p class="section-intro reveal" style="margin-top:0">Three visual decisions that give the app its identity — each one rooted in the history of the game rather than designed from scratch.</p>
+
+    <div class="ui-panel reveal" style="margin-bottom:16px;">
+      <p class="ui-panel-title">Club Badges</p>
+      <p class="ui-panel-desc">All 32 teams from the 2016 Gibsons edition are represented with custom-designed badges. Now when Arsenal draw Man Utd in the semi-final, the badges and colours make it real and evoke memories of their legendary rivalry. Testing confirmed it: the badges aren't licensed but were the first thing players commented on.</p>
+      <p class="ui-attribution">Badge icons sourced using components from <a href="https://game-icons.net/" target="_blank" rel="noopener">game-icons.net</a></p>
+      <figure>
+        <img src="wembley-assets/wembley_badges.png" alt="All 32 custom club badges" loading="lazy" style="width:100%;display:block;margin-top:20px;border-radius:var(--radius);border:1px solid var(--border);">
+        <figcaption style="font-size:12px;color:var(--text-dim);margin-top:8px;">All 32 custom-designed club badges — 2016 Gibsons edition</figcaption>
+      </figure>
+    </div>
+
+    <div class="ui-panel reveal" style="margin-bottom:16px;">
+      <p class="ui-panel-title">Skins</p>
+      <p class="ui-panel-desc">Two skins built for two audiences: the Classic 2016 skin uses a green pitch background faithful to the board game's palette to feel like an extension of the physical box. The Sky skin is dark blue with red accents, inspired by spending Saturday afternoons in the 2000s watching your team's fortunes via the vidiprinter.</p>
+      <div class="skins-grid">
+        <figure>
+          <img src="wembley-assets/Screenshot%202026-05-25%20103708.png" alt="Classic 2016 skin" loading="lazy">
+          <figcaption>Classic 2016 — green pitch, board game palette</figcaption>
+        </figure>
+        <figure>
+          <img src="wembley-assets/Screenshot%202026-05-25%20103800.png" alt="Sky skin" loading="lazy">
+          <figcaption>Sky — dark blue, broadcast aesthetic</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="ui-panel reveal">
+      <p class="ui-panel-title">Logo</p>
+      <p class="ui-panel-desc">The later Gibsons edition logo had the right character — the FA Cup trophy rendered in intricate crosshatched detail, the lettering feeling genuinely considered. The redesign for the web release used that as its reference: a badge format with the trophy overlapping the wordmark, bold type, a pennant framing the lettering. More detail than a flat modern logo, more web-appropriate than scanning the box art.</p>
+      <div class="logo-pair">
+        <figure>
+          <img src="wembley-assets/retro_logo2.webp" alt="Later Gibsons edition logo" loading="lazy">
+          <figcaption>Later Gibsons edition — the design reference</figcaption>
+        </figure>
+        <figure>
+          <img src="new_logo.png" alt="Redesigned Wembley logo" loading="lazy" style="object-fit:contain;background:#1a3a1a;">
+          <figcaption>Redesign — heritage brought forward for web</figcaption>
+        </figure>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- QUOTES -->
+  <section class="content-section" id="s-quotes">
+    <p class="section-eyebrow reveal">Heard from players</p>
+    <h2 class="section-heading reveal">What people said.</h2>
+    <div class="quotes-list">
+      <div class="quote-block reveal reveal-delay-1">
+        <p class="quote-text">I haven't played this since I was a kid. Finding this felt like finding the game again.</p>
+        <p class="quote-author">Returning player — grew up with the board game</p>
+      </div>
+      <div class="quote-block reveal reveal-delay-2">
+        <p class="quote-text">The badges make it. You forget it's a simulation — you're watching Chelsea vs Man City in the semi-final and it actually matters.</p>
+        <p class="quote-author">Beta tester — football fan</p>
+      </div>
+      <div class="quote-block reveal reveal-delay-3">
+        <p class="quote-text">We used to play this on Christmas Day. Now we can again, even without the box.</p>
+        <p class="quote-author">Player — family user, nostalgic</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFLECTIONS -->
+  <section class="content-section" id="s-reflections">
+    <p class="section-eyebrow reveal">Looking back</p>
+    <h2 class="section-heading reveal">What I'd do differently.</h2>
+    <div class="reflection-list">
+      <div class="reflection-item reveal">
+        <p class="reflection-marker">↩</p>
+        <div>
+          <p class="reflection-title">More iteration on the setup screen</p>
+          <p class="reflection-desc">The setup screen is the first impression of the app. I had strong reference material — FIFA kick-off screens, TV highlights shows — but went straight into a layout without enough early exploration. That screen deserved more time. It's the moment before the game starts and it should feel like one.</p>
+        </div>
+      </div>
+      <div class="reflection-item reveal reveal-delay-1">
+        <p class="reflection-marker">↩</p>
+        <div>
+          <p class="reflection-title">Establish structure before visual richness</p>
+          <p class="reflection-desc">I went deep into the colour palette and image-based backgrounds before the UI structure was stable. It looked good early, but made changes harder to make later. I'd lock the layout and mechanics first, then add visual richness once the structure was solid.</p>
+        </div>
+      </div>
+      <div class="reflection-item reveal reveal-delay-2">
+        <p class="reflection-marker">↩</p>
+        <div>
+          <p class="reflection-title">Simplify the Cup Heroes system earlier</p>
+          <p class="reflection-desc">The Cup Heroes UI evolved significantly through the build — slot logic, how players are selected, how effects are communicated. Simplifying that system earlier in the process would have made it faster to iterate on. The final version is cleaner, but getting there took longer than it needed to.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEXT STEPS -->
+  <section class="content-section" id="s-next">
+    <p class="section-eyebrow reveal">What's next</p>
+    <h2 class="section-heading reveal">On the roadmap.</h2>
+    <div class="next-steps">
+      <div class="next-step reveal reveal-delay-1">
+        <div class="step-dot wip"></div>
+        <div>
+          <p class="step-title">Cup Heroes — hidden secondary bonuses</p>
+          <p class="step-desc">Additional effects tied to specific players that aren't visible upfront. A layer of discovery that adds depth to selection and makes the simulation feel more like the real game. Currently in active development.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-2">
+        <div class="step-dot"></div>
+        <div>
+          <p class="step-title">Competition Mode</p>
+          <p class="step-desc">Start a new game and the app simulates the full FA Cup draw, loads all 32 teams automatically, and knocks teams out as they lose. A full tournament that runs itself — no manual setup required.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-3">
+        <div class="step-dot wip"></div>
+        <div>
+          <p class="step-title">Board Game Geek community</p>
+          <p class="step-desc">Wembley ranks 16,927 on BGG with a 6.1 rating — niche, but with a committed fanbase who have been asking for digital versions for years. Currently posting to the BGG forum to gather feedback from the core audience the app was built for.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-4">
+        <div class="step-dot"></div>
+        <div>
+          <p class="step-title">Retro Mode</p>
+          <p class="step-desc">The current version is based on the 2016 Gibsons edition, but earlier versions of the game featured different team sets. Retro Mode would release a skin and team roster faithful to those older editions — for players who remember a different version of the game.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="case-cta">
+    <h2 class="cta-heading reveal">Move clear of every opponent.</h2>
+    <p class="cta-sub reveal reveal-delay-1">Run your own FA Cup. No board required — just the game you remember.</p>
+    <a href="https://d4vidholly.github.io/wembley-game/" target="_blank" rel="noopener" class="cta-btn reveal reveal-delay-2">
+      Play Wembley
+      <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </section>
+
+  <div class="next-project">
+    <span class="next-project-label">Next project</span>
+    <a href="moveclear-predictor.html" class="next-project-link">
+      Boro Predictor
+      <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+
+  <footer>
+    <span class="footer-left">Move<span class="c">Clear</span></span>
+    <span class="footer-right">
+      <span>&copy; 2026 Move Clear Labs</span>
+      <a href="https://d4vidholly.github.io/" target="_blank" rel="noopener"><img src="DHD_logo.png" alt="DHD" class="footer-dhd"></a>
+    </span>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40), { passive: true });
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Chapter nav
+    const chapterNav = document.getElementById('chapter-nav');
+    const chapterItems = document.querySelectorAll('.chapter-nav-item');
+    const chapterSections = document.querySelectorAll('[id^="s-"]');
+
+    // Show chapter nav once hero leaves viewport
+    const heroEl = document.querySelector('.case-hero');
+    if (heroEl) {
+      new IntersectionObserver(entries => {
+        chapterNav.classList.toggle('visible', !entries[0].isIntersecting);
+      }, { threshold: 0.05 }).observe(heroEl);
+    }
+
+    // Highlight active chapter
+    const chapterSpy = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          chapterItems.forEach(i => i.classList.remove('active'));
+          const active = document.querySelector(`.chapter-nav-item[href="#${entry.target.id}"]`);
+          if (active) {
+            active.classList.add('active');
+            const inner = active.closest('.chapter-nav-inner');
+            if (inner) inner.scrollTo({ left: active.offsetLeft - inner.offsetWidth / 2 + active.offsetWidth / 2, behavior: 'smooth' });
+          }
+        }
+      });
+    }, { threshold: 0.2, rootMargin: '-15% 0px -70% 0px' });
+    chapterSections.forEach(s => chapterSpy.observe(s));
+  </script>
+
+</body>
+</html>
