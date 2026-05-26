@@ -6,6 +6,20 @@
   <meta name="description" content="Move Clear — Data Built for Devotion. A studio of digital tools for people who care too much about sport.">
   <link rel="icon" type="image/png" href="MC_round.png">
   <title>Move Clear — Data Built for Devotion</title>
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Move Clear">
+  <meta property="og:title" content="Move Clear — Data Built for Devotion">
+  <meta property="og:description" content="A studio of digital tools for people who care too much about sport.">
+  <meta property="og:url" content="https://d4vidholly.github.io/moveclear/">
+  <meta property="og:image" content="https://d4vidholly.github.io/moveclear/moveclear_social.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Move Clear — Data Built for Devotion">
+  <meta name="twitter:description" content="A studio of digital tools for people who care too much about sport.">
+  <meta name="twitter:image" content="https://d4vidholly.github.io/moveclear/moveclear_social.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
@@ -420,7 +434,8 @@
     /* ── ABOUT ────────────────────────────────────────────────── */
     .about-section { padding: 80px 24px; max-width: 1080px; margin: 0 auto; }
     .about-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 28px; }
-    .about-layout { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; flex-wrap: wrap; }
+    .about-layout { display: flex; align-items: flex-start; justify-content: space-between; gap: 48px; flex-wrap: wrap; }
+    .about-photo { width: 120px; height: 120px; border-radius: var(--radius); object-fit: cover; object-position: center top; border: 1px solid var(--border-hover); flex-shrink: 0; }
     .about-text { flex: 1; min-width: 240px; }
     .about-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(32px, 5vw, 52px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--text); margin-bottom: 8px; }
     .about-title { font-size: 13px; color: var(--blue); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px; }
@@ -430,7 +445,7 @@
     .about-cta:hover { color: var(--text); border-color: rgba(238,238,240,0.35); }
     .about-cta svg { width: 12px; height: 12px; transition: transform 0.2s; }
     .about-cta:hover svg { transform: translateX(3px); }
-    @media (max-width: 700px) { .about-layout { flex-direction: column; gap: 28px; align-items: flex-start; } .about-ctas { flex-direction: row; flex-wrap: wrap; } }
+    @media (max-width: 700px) { .about-layout { flex-direction: column; gap: 24px; align-items: flex-start; } .about-photo { width: 80px; height: 80px; } .about-ctas { flex-direction: row; flex-wrap: wrap; } }
 
     /* ── CODA ─────────────────────────────────────────────────── */
     .coda {
@@ -674,6 +689,7 @@
     <div class="reveal">
       <p class="about-eyebrow">The maker</p>
       <div class="about-layout">
+        <img src="profile.png" alt="David Holly" class="about-photo">
         <div class="about-text">
           <h2 class="about-name">David Holly</h2>
           <p class="about-title">Product Designer</p>
