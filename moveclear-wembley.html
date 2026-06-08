@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wembley — Move Clear</title>
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Move Clear">
   <meta property="og:title" content="Wembley — Move Clear">
@@ -13,7 +12,6 @@
   <meta property="og:image" content="https://d4vidholly.github.io/moveclear/moveclear_social.png">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Wembley — Move Clear">
   <meta name="twitter:description" content="A digital companion for the Wembley FA Cup board game. Match tracking and stats for devoted fans of the beautiful game.">
@@ -25,21 +23,60 @@
   <style>
     :root { --accent: #34C759; --accent-rgb: 52,199,89; }
 
-    /* Wembley hero is larger than the shared default */
     .hero-name { font-size: clamp(64px, 12vw, 140px); }
-
-    /* Wembley uses 3-col opportunity grid */
     .opportunity-list { grid-template-columns: repeat(3, 1fr); }
     @media (max-width: 860px) { .opportunity-list { grid-template-columns: repeat(2, 1fr); } }
 
-    /* Penalty / testing */
-    .penalty-story { font-size: 15px; line-height: 1.7; color: var(--text-muted); margin-bottom: 40px; }
+    /* Hero image — smaller and borderless */
+    .hero-image { max-width: 506px; }
+    .hero-image img { border: none; border-radius: 0; }
+
+    /* Inline figure within a content-section */
+    .section-figure { border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; margin-bottom: 28px; }
+    .section-figure img { width: 100%; display: block; }
+    .section-figure figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
+
+    /* Speech bubbles */
+    .speech-bubbles-wrap { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 32px; margin-top: 48px; }
+    .speech-bubbles-label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 24px; }
+    .speech-bubbles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-bottom: 14px; }
+    .speech-bubble { background: #f0efec; border-radius: 14px 14px 14px 4px; padding: 20px 22px 18px; position: relative; }
+    .speech-bubble::after { content: ''; position: absolute; bottom: -11px; left: 18px; width: 0; height: 0; border-right: 12px solid transparent; border-top: 12px solid #f0efec; }
+    .speech-bubble-text { font-size: 13px; line-height: 1.65; color: #1a1917; font-style: italic; }
+    .speech-bubble-source { margin-top: 12px; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #9e9a95; }
+
+    /* Process questions list */
+    .process-questions { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 20px 0 36px; }
+    .process-questions li { font-size: 14px; line-height: 1.55; color: var(--text-muted); padding: 13px 18px; background: var(--bg-card); border: 1px solid var(--border); border-left: 2px solid rgba(var(--accent-rgb), 0.3); border-radius: 0 var(--radius) var(--radius) 0; }
+
+    /* Decision table */
+    .decision-table-wrap { margin: 20px 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .decision-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .decision-table th { text-align: left; padding: 10px 16px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); background: var(--bg-card); border-bottom: 1px solid var(--border); font-weight: 500; }
+    .decision-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; line-height: 1.55; }
+    .decision-table tr:last-child td { border-bottom: none; }
+    .decision-table .chosen { color: var(--accent); font-weight: 500; }
+
+    /* Findings list */
+    .findings-list { display: flex; flex-direction: column; gap: 12px; margin: 28px 0; }
+    .finding-item { display: flex; gap: 16px; align-items: flex-start; padding: 18px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+    .finding-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent); flex-shrink: 0; min-width: 18px; padding-top: 2px; }
+    .finding-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+    .finding-desc { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+
+    /* Penalty */
+    .penalty-intro { font-size: 15px; line-height: 1.7; color: var(--text-muted); margin-bottom: 28px; }
     .penalty-progression { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .penalty-step { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
     .penalty-step img { width: 100%; display: block; }
     .penalty-step-caption { padding: 12px 16px; background: var(--bg-card); border-top: 1px solid var(--border); }
     .penalty-step-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
     .penalty-step-desc { font-size: 13px; line-height: 1.5; color: var(--text-muted); }
+
+    /* Image placeholder */
+    .img-placeholder { background: var(--bg-card); border: 1px dashed var(--border-hover); border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 180px; padding: 32px; text-align: center; }
+    .img-placeholder-icon { font-size: 20px; margin-bottom: 10px; opacity: 0.35; }
+    .img-placeholder-label { font-size: 12px; color: var(--text-dim); letter-spacing: 0.02em; max-width: 260px; line-height: 1.5; }
 
     /* Cup Heroes */
     .heroes-intro { background: var(--bg-card); border: 1px solid var(--border); border-top: 2px solid rgba(var(--accent-rgb), 0.5); border-radius: var(--radius-lg); padding: 36px; margin-bottom: 16px; }
@@ -52,14 +89,14 @@
     .mechanic-desc { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
     .mechanic-wip { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); background: rgba(var(--accent-rgb), 0.08); border: 1px solid rgba(var(--accent-rgb), 0.2); border-radius: 20px; padding: 3px 10px; }
 
-    /* UI section */
+    /* UI panels */
     .ui-panel { background: var(--bg-card); border: 1px solid var(--border); border-top: 2px solid rgba(var(--accent-rgb), 0.4); border-radius: var(--radius-lg); padding: 36px; }
     .ui-panel-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
     .ui-panel-desc { font-size: 15px; line-height: 1.7; color: var(--text-muted); }
     .ui-attribution { margin-top: 12px; font-size: 12px; color: var(--text-dim); }
     .ui-attribution a { color: var(--accent); text-decoration: none; opacity: 0.8; }
     .ui-attribution a:hover { opacity: 1; }
-    .skins-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+    .skins-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
     .skins-grid figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
     .skins-grid img { width: 100%; display: block; }
     .skins-grid figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
@@ -68,25 +105,58 @@
     .logo-pair img { width: 100%; display: block; aspect-ratio: 1; object-fit: cover; background: #1a1a1a; }
     .logo-pair figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
 
-    /* Hero image — smaller and borderless for Wembley */
-    .hero-image { max-width: 506px; }
-    .hero-image img { border: none; border-radius: 0; }
+    /* Stat grid */
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 20px; }
+    .stat-number { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(24px, 3.5vw, 38px); font-weight: 800; letter-spacing: -0.03em; color: var(--text); line-height: 1; }
+    .stat-label { margin-top: 8px; font-size: 12px; line-height: 1.4; color: var(--text-muted); }
+
+    /* Testing priorities */
+    .testing-priorities { display: flex; flex-direction: column; gap: 14px; margin-top: 40px; }
+    .priority-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 28px; }
+    .priority-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .priority-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 8px; }
+    .priority-context { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+    .priority-metric { margin-top: 14px; font-size: 13px; color: var(--text-dim); border-top: 1px solid var(--border); padding-top: 12px; }
+    .priority-metric strong { color: rgba(var(--accent-rgb), 0.8); font-weight: 500; }
+
+    /* BGG feedback images */
+    .bgg-feedback { display: flex; flex-direction: column; gap: 16px; margin-top: 28px; }
+    .bgg-feedback figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .bgg-feedback img { width: 100%; display: block; }
+    .bgg-feedback figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
+    .bgg-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-size: 13px; color: var(--accent); text-decoration: none; opacity: 0.8; transition: opacity 0.2s; }
+    .bgg-link:hover { opacity: 1; }
+    .bgg-link svg { width: 12px; height: 12px; }
 
     @media (max-width: 700px) {
-      .penalty-progression, .heroes-mechanics, .skins-grid, .logo-pair { grid-template-columns: 1fr; }
+      .penalty-progression, .heroes-mechanics, .logo-pair, .speech-bubbles-grid { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
     }
+
+    /* Sketch — rotated */
+    .sketch-wrap { border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; margin-bottom: 28px; }
+    .sketch-inner img { display: block; width: 100%; }
+    .sketch-wrap figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
+
+    /* Dev grid */
+    .dev-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+    .dev-grid figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .dev-grid img { width: 100%; display: block; }
+    .dev-grid figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
   </style>
 </head>
 <body>
 
-  <!-- SECTION NAV -->
+  <!-- CHAPTER NAV -->
   <div class="chapter-nav" id="chapter-nav">
     <div class="chapter-nav-inner">
       <a class="chapter-nav-item" href="#s-discovery">Discovery</a>
-      <a class="chapter-nav-item" href="#s-opportunity">Opportunity</a>
+      <a class="chapter-nav-item" href="#s-process">Process</a>
       <a class="chapter-nav-item" href="#s-decisions">Decisions</a>
       <a class="chapter-nav-item" href="#s-testing">Testing</a>
-      <a class="chapter-nav-item" href="#s-nice-touches">Nice Touches</a>
+      <a class="chapter-nav-item" href="#s-features">Features</a>
+      <a class="chapter-nav-item" href="#s-results">Results</a>
       <a class="chapter-nav-item" href="#s-quotes">Players</a>
       <a class="chapter-nav-item" href="#s-reflections">Reflections</a>
       <a class="chapter-nav-item" href="#s-next">Next Steps</a>
@@ -98,7 +168,7 @@
       <svg viewBox="0 0 14 14" fill="none"><path d="M13 7H1M7 13l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <img src="moveclear_logo.png" alt="Move Clear" class="nav-mc-logo">
     </a>
-    <a href="https://d4vidholly.github.io/wembley-game/" target="_blank" rel="noopener" class="nav-cta">
+    <a href="https://www.wembley-game.live" target="_blank" rel="noopener" class="nav-cta">
       Play Wembley
       <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
@@ -114,12 +184,8 @@
     </div>
     <h1 class="hero-name"><span>Wembley</span></h1>
     <p class="hero-subtitle">Bringing Digital Magic to the Cup</p>
-<p class="hero-intro">The Wembley board game has been on kitchen tables since the 1950s.
-
-Playing it again as an adult, experiencing slow game play and finding forums full of people asking for dice probabilities, rules half-remembered, ways to keep playing when the box was outdated gave an opportunity.
-
-<br><br>
-This is its digital companion: building on the original mechanics, delivering strategy and realism while evoking memories of the world's oldest competition.</p>    <div class="hero-meta">
+    <p class="hero-intro">The Wembley board game has been on kitchen tables since the 1950s. Playing it again as an adult — and finding forums full of people asking for dice probabilities, rules half-remembered, ways to keep playing when the box was lost or outdated — made the gap obvious.<br><br>This is its digital companion: building on the original mechanics, removing everything that got in the way, and delivering strategy and drama while evoking memories of the world's oldest cup competition.</p>
+    <div class="hero-meta">
       <div>
         <p class="hero-meta-label">Role</p>
         <p class="hero-meta-value">Full Stack Product Designer</p>
@@ -131,6 +197,10 @@ This is its digital companion: building on the original mechanics, delivering st
       <div>
         <p class="hero-meta-label">Platform</p>
         <p class="hero-meta-value">Web app</p>
+      </div>
+      <div>
+        <p class="hero-meta-label">Year</p>
+        <p class="hero-meta-value">2024–25</p>
       </div>
       <div>
         <p class="hero-meta-label">Status</p>
@@ -145,6 +215,23 @@ This is its digital companion: building on the original mechanics, delivering st
     <img src="wembley-assets/wembley_hero.png" alt="Wembley — match setup screen" loading="lazy">
   </div>
 
+  <!-- THE PROBLEM -->
+  <section class="content-section">
+    <p class="section-eyebrow reveal">The Problem</p>
+    <h2 class="section-heading reveal">The overhead was killing the game.</h2>
+    <p class="section-intro reveal">Playing the physical game again made the overhead immediately clear. Prize money had to be physically counted and handed out after each round. Every goal required rolling three separate dice and calculating additional goals by hand. Rules were disputed and had to be looked up mid-game. The game paused constantly. The drama didn't survive the admin.</p>
+    <div class="approach-visuals reveal">
+      <figure>
+        <img src="wembley-assets/images/wembley9.webp" alt="The physical 2016 Gibsons edition board game — board and cards in play" loading="lazy">
+        <figcaption>The 2016 Gibsons edition — board and cards</figcaption>
+      </figure>
+      <figure>
+        <img src="wembley-assets/images/wembley9b.webp" alt="The physical 2016 Gibsons edition — dice and prize money in play" loading="lazy">
+        <figcaption>Dice and prize money in play</figcaption>
+      </figure>
+    </div>
+  </section>
+
   <!-- DISCOVERY -->
   <section class="content-section" id="s-discovery">
     <p class="section-eyebrow reveal">Discovery</p>
@@ -153,37 +240,35 @@ This is its digital companion: building on the original mechanics, delivering st
       <div class="discovery-card reveal reveal-delay-1">
         <p class="discovery-icon">🎲</p>
         <p class="discovery-title">Around the table</p>
-        <p class="discovery-desc">Playing the game with others made the friction immediate. Prize money had to be physically handed out for gate receipts and match winnings. When a goal was scored, someone rolled three separate dice and added additional goals by hand. Every time things got exciting — a cup upset, a late equaliser — the game had to pause while someone totted up the numbers. "You've forgotten to add my goal." "Who owes who for the gate?" The game was good. The overhead was killing it.</p>
+        <p class="discovery-desc">Playing with others made the friction immediate. Prize money had to be physically counted and handed out after each round. Every goal required rolling three separate dice and adding up. Rules were disputed and had to be looked up mid-game. The game paused constantly. The drama didn't survive the admin.</p>
       </div>
       <div class="discovery-card reveal reveal-delay-2">
         <p class="discovery-icon">💬</p>
         <p class="discovery-title">Forum research</p>
-        <p class="discovery-desc">Searching online surfaced a consistent pattern: forums and review threads full of people asking for dice probabilities, requesting digital versions, and sharing workarounds for broken or incomplete sets. The demand for a faithful digital companion was real — it just didn't exist yet.</p>
+        <p class="discovery-desc">Searching online surfaced a consistent pattern. People who loved the game were working around it — hunting for missing components, transcribing rules, asking strangers for dice probabilities. The demand for a faithful digital companion was real — even if no one had asked for it by name.</p>
       </div>
     </div>
-    <p class="research-eyebrow reveal">What the forums said</p>
-    <div class="research-quotes">
-      <div class="research-quote reveal reveal-delay-1">
-        <p class="research-quote-text">Just found the game and want to play it with the family at Christmas. I've lost the dice. I would like to recreate them so I can play, but I can't find them anywhere on the web.</p>
-        <p class="research-quote-source">Forum post — Board Game Geek</p>
-      </div>
-      <div class="research-quote reveal reveal-delay-2">
-        <p class="research-quote-text">I picked up a copy of this classic in a charity shop — it's in great condition, but no rules. Can anyone point me in the direction of some?</p>
-        <p class="research-quote-source">Forum post — Board Game Geek</p>
-      </div>
-      <div class="research-quote reveal reveal-delay-3">
-        <p class="research-quote-text">The dice are poorly weighted and it needs updating properly rather than just a reprint. And yet, I love it.</p>
-        <p class="research-quote-source">Review — Board Game Geek</p>
-      </div>
-      <div class="research-quote reveal reveal-delay-4">
-        <p class="research-quote-text">Played with the right crowd this can become an incredibly fun experience with memorable stand-up-and-cheer moments. The theme gives it a real boost.</p>
-        <p class="research-quote-source">Review — Board Game Geek</p>
+    <div class="speech-bubbles-wrap reveal">
+      <p class="speech-bubbles-label">What the forums said</p>
+      <div class="speech-bubbles-grid">
+        <div class="speech-bubble">
+          <p class="speech-bubble-text">Just found the game and want to play at Christmas. I've lost the dice — can't find them anywhere online.</p>
+          <p class="speech-bubble-source">Board Game Geek</p>
+        </div>
+        <div class="speech-bubble">
+          <p class="speech-bubble-text">Picked up a copy in a charity shop. It's in great condition, but no rules. Can anyone help?</p>
+          <p class="speech-bubble-source">Board Game Geek</p>
+        </div>
+        <div class="speech-bubble">
+          <p class="speech-bubble-text">The dice are poorly weighted and it needs updating properly. And yet, I love it.</p>
+          <p class="speech-bubble-source">Board Game Geek</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- THE OPPORTUNITY -->
-  <section class="content-section" id="s-opportunity">
+  <section class="content-section">
     <p class="section-eyebrow reveal">The opportunity</p>
     <h2 class="section-heading reveal">What it needed to be.</h2>
     <p class="section-intro reveal">Not a replacement — a companion. One that handles everything the physical game can't, and bridges two audiences at once: younger fans who consume sport digitally and might never have discovered the board game, and the generation who grew up with it but found the overhead getting in the way.</p>
@@ -196,54 +281,67 @@ This is its digital companion: building on the original mechanics, delivering st
       <div class="opportunity-item reveal reveal-delay-2">
         <p class="opportunity-icon">📺</p>
         <p class="opportunity-title">The atmosphere</p>
-        <p class="opportunity-desc">Chronologically: weighing up pre-match selections, waiting for the result, the tension of a penalty shootout if it ends in a draw. Not just a tool — an occasion that feels like the real thing.</p>
+        <p class="opportunity-desc">Weighing up pre-match selections, waiting for the result, the tension of a penalty shootout if it ends in a draw. Not just a tool — an occasion that feels like the real thing.</p>
       </div>
       <div class="opportunity-item reveal reveal-delay-3">
         <p class="opportunity-icon">🏟️</p>
         <p class="opportunity-title">Built to grow</p>
-        <p class="opportunity-desc">New teams, new editions, rule variants. A Retro skin for older fans who remember a different version of the game; new digital skins for those who've never owned the box. Quality-of-life improvements the physical game never could.</p>
+        <p class="opportunity-desc">New teams, new editions, rule variants. A Retro skin for older fans who remember a different version of the game; new digital skins for those who've never owned the box.</p>
       </div>
     </div>
   </section>
 
-  <!-- BOARD GAME IMAGE -->
-  <div class="inline-image">
-    <figure>
-      <img src="wembley-assets/wembley_box.png" alt="The Wembley board game" loading="lazy">
-      <figcaption>The 2016 Gibsons edition — the reference the digital companion is built on</figcaption>
+  <!-- PROCESS -->
+  <section class="content-section" id="s-process">
+    <p class="section-eyebrow reveal">Process</p>
+    <h2 class="section-heading reveal">Build it, don't just design it.</h2>
+    <p class="section-intro reveal">This project started with a deliberate constraint: build it, not just design it. The aim was to learn through doing — designing in the browser rather than handing off from Figma. That shaped the process in ways that were both limiting and clarifying.<br><br>Before any decisions were locked, the work began on paper — plotting arrows, mapping edge cases, working out the decision points in a typical match of the board game. Nothing resolved yet. Just getting the logic out of my head and onto a page.</p>
+    <figure class="sketch-wrap reveal">
+      <div class="sketch-inner">
+        <img src="wembley-assets/images/sketch.jpg" alt="Early hand-drawn logic flow — game simulation logic mapped on paper before any decisions were made. Decision points, user inputs, score paths, and edge cases annotated throughout." loading="lazy">
+      </div>
+      <figcaption>Hand-drawn logic flow — the full game simulation mapped before a line of code was written</figcaption>
     </figure>
-  </div>
+    <p class="section-intro reveal" style="margin-top:0">From there, one principle shaped everything that followed: the audience isn't only football fans. It's families — different ages, different levels of football knowledge. Every UI decision had to work without assumed knowledge. That constraint produced some of the most consistent design choices in the app: star ratings instead of division names, "Scored" and "Missed" instead of coloured circles alone, round badges that read like game counters rather than crests. Plain language, not football language.<br><br>Two decisions shaped the build more than any others.</p>
+    <figure class="section-figure reveal">
+      <img src="wembley-assets/images/wembley10.png" alt="Figma prototype flow — full app sequence: Load Screen → Home Select → Confirm → Round Select, with connection arrows" loading="lazy">
+      <figcaption>Figma prototype flow — the full sequence mapped before building</figcaption>
+    </figure>
+    <div class="dev-grid reveal">
+      <figure>
+        <img src="wembley-assets/images/wembley_dev1.png" alt="Early prototype v1 — initial layout exploration" loading="lazy">
+        <figcaption>v1 — initial layout, functional but rough</figcaption>
+      </figure>
+      <figure>
+        <img src="wembley-assets/images/wembley_dev2.png" alt="Early prototype v2 — team select with alphabetical dropdown open" loading="lazy">
+        <figcaption>v2 — team select, alphabetical dropdown open</figcaption>
+      </figure>
+      <figure>
+        <img src="wembley-assets/images/wembley_dev3.png" alt="Early prototype v3 — refined layout before final build" loading="lazy">
+        <figcaption>v3 — structure settling, identity still missing</figcaption>
+      </figure>
+    </div>
+  </section>
 
-  <!-- APPROACH -->
+  <!-- DECISIONS -->
   <section class="content-section" id="s-decisions">
     <p class="section-eyebrow reveal">Decisions that shaped it</p>
-    <h2 class="section-heading reveal">Three things that mattered most.</h2>
+    <h2 class="section-heading reveal">Two things that mattered most.</h2>
     <div class="approach-list">
 
       <div class="approach-item reveal">
         <p class="approach-num">1</p>
         <div>
           <p class="approach-title">Layout and information hierarchy</p>
-          <p class="approach-desc">The wireframes started on paper before moving into Figma — mapping the user flow from load screen through team selection, round selection, and match play. These were the core features, and early testing focused on how players would find and select their team. The card format — two opposing team panels with badge, division, stadium, and Cup Heroes visible at a glance — came from studying the FIFA team select screen. That layout puts both sides in front of the player simultaneously, making the matchup feel like an event before a ball is kicked.</p>
-          <div class="approach-visuals">
-            <figure>
-              <img src="wembley-load-screen.png" alt="Early v1 UI" loading="lazy">
-              <figcaption>v1 — functional, no identity</figcaption>
-            </figure>
-            <figure>
-              <img src="wembley-assets/wembley_select.jpg" alt="FIFA team select — reference" loading="lazy">
-              <figcaption>FIFA reference — card layout for team matchups</figcaption>
-            </figure>
-          </div>
-          <div class="approach-visual-full">
-            <figure>
-              <img src="wembley-assets/wembley_wireframes.png" alt="Figma wireframes" loading="lazy">
-              <figcaption style="padding:10px 14px;font-size:12px;color:var(--text-dim);background:var(--bg-card);border-top:1px solid var(--border);">Figma wireframes — mapping the flow before building</figcaption>
-            </figure>
-          </div>
+          <p class="approach-desc">The card format — two opposing team panels with badge, division, stadium, and player tokens visible at a glance — came from studying the FIFA team select screen. That layout puts both sides in front of the player simultaneously, making the matchup feel like an event before a ball is kicked.</p>
+          <figure class="section-figure reveal">
+            <img src="wembley-assets/images/wembley14.png" alt="FIFA Classic Match team select reference — France vs Germany side-by-side card layout" loading="lazy">
+            <figcaption>FIFA team select reference — both sides in view simultaneously</figcaption>
+          </figure>
+          <p class="approach-desc">Star ratings were introduced to visualise divisions at a glance — without requiring any knowledge of English football. Football fans know the home team is always shown on the left, that a Premier League side outranks a League Two side. But for a family board game with mixed audiences, none of that could be assumed. Stars give any player the same quick read a football fan already has instinctively — no football knowledge required.<br><br>The badge format mattered too. Early models used larger badges that took over the whole card. The round format works better: it sits like a game counter, which is exactly what it's descended from.</p>
           <div class="decision-callout">
             <p class="decision-callout-label">Design note</p>
-            <p class="decision-callout-text">Football fans know the home team is always shown first (left) — but for a family board game with mixed audiences, more information was needed. Star ratings were introduced to help visualise divisions at a glance, giving casual players the same instinct a football fan already has.</p>
+            <p class="decision-callout-text">The FIFA reference was useful but not prescriptive. FIFA scrolls through ~20 international sides on a controller. At 32 English clubs in a browser, that approach becomes slow and fatiguing — especially repeated across a full game session.</p>
           </div>
         </div>
       </div>
@@ -252,105 +350,214 @@ This is its digital companion: building on the original mechanics, delivering st
         <p class="approach-num">2</p>
         <div>
           <p class="approach-title">The team select dropdown</p>
-          <p class="approach-desc">The game has 32 teams. The question was how players should find theirs. Three options: scroll through a visual badge grid, a free-text search, or a dropdown list. The decision was a dropdown sorted alphabetically by team name. Players know who they support — the team name, not the league. FIFA scrolls through teams horizontally on a controller, which works at roughly 20 international sides. At 32 English clubs in a browser, that approach becomes slow and fatiguing. A searchable alphabetical dropdown gets players to their club in two taps, without needing to know which division they play in.</p>
-          <div class="decision-callout">
-            <p class="decision-callout-label">The decision</p>
-            <p class="decision-callout-text">FIFA's L–R team scroll works for ~20 sides on a controller. At 32 clubs in a browser, it's too slow. A dropdown sorted by team name gets players to their club in two taps — because players know who they support, not what division they're in.</p>
+          <p class="approach-desc">The game has 32 teams. Two options were considered for how players find theirs:</p>
+          <div class="decision-table-wrap">
+            <table class="decision-table">
+              <thead>
+                <tr>
+                  <th>Option</th>
+                  <th>How it works</th>
+                  <th>Why rejected / chosen</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Visual badge grid</td>
+                  <td>Scroll through all 32 badges</td>
+                  <td>Visually engaging but requires knowing what each badge looks like</td>
+                </tr>
+                <tr>
+                  <td class="chosen">Alphabetical dropdown ✓</td>
+                  <td>List sorted by team name</td>
+                  <td class="chosen">Players know their club by name. Fast in two taps. No division knowledge required.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
-      </div>
-
-      <div class="approach-item reveal reveal-delay-2">
-        <p class="approach-num">3</p>
-        <div>
-          <p class="approach-title">Moving the data out of the codebase</p>
-          <p class="approach-desc">The app is built in vanilla HTML, CSS, and JavaScript — no frameworks, just the browser. In the first version, all 32 teams and their data (name, division, stadium, star rating, badge path) were hardcoded directly into a JavaScript object. It worked, but the file grew heavy, load times suffered, and any update to a team's data meant editing the application code. The fix was to move the full dataset to a Google Sheets spreadsheet, fetched on page load via the Sheets API. The JS file shrank significantly, load times improved, and team data can now be edited in a spreadsheet without touching a line of code.</p>
           <div class="decision-callout">
             <p class="decision-callout-label">The decision</p>
-            <p class="decision-callout-text">Removing the hardcoded dataset meant any update — a new rating, a renamed club, adding a team — could be made in a spreadsheet without touching the application. The accepted trade-offs: a network request on every page load adds latency, and the app now depends on Google's API staying available. Mitigated by setting the Sheet to read-only, which removes the edit-access risk. For a project at this scale, the maintainability gain outweighs the dependency.</p>
+            <p class="decision-callout-text">Sort by name, not division. Players know who they support — they don't need to know their league position to find them. One gap surfaced in live testing: the dropdown has no hover state, making it less obvious it opens. That's on the fix list, backed by data.</p>
           </div>
         </div>
       </div>
 
     </div>
   </section>
-
-  <!-- MATCH SCREENSHOTS -->
-  <div class="image-grid reveal">
-    <figure>
-      <img src="wembley-assets/Screenshot%202026-05-25%20103708.png" alt="Classic skin — match setup" loading="lazy">
-      <figcaption>Classic 2016 skin — green pitch, faithful to the board game</figcaption>
-    </figure>
-    <figure>
-      <img src="wembley-assets/Screenshot%202026-05-25%20103800.png" alt="Sky skin — match setup" loading="lazy">
-      <figcaption>Sky skin — dark blue, vidiprinter era</figcaption>
-    </figure>
-  </div>
-
-  <div class="inline-image">
-    <figure>
-      <img src="wembley-assets/Screenshot%202026-05-25%20103855.png" alt="Match report" loading="lazy">
-      <figcaption>Match report — every result gets the full treatment</figcaption>
-    </figure>
-  </div>
 
   <div class="section-divider"></div>
 
   <!-- TESTING -->
   <section class="content-section" id="s-testing">
     <p class="section-eyebrow reveal">Testing</p>
-    <h2 class="section-heading reveal">The penalty shootout.</h2>
-    <p class="penalty-story reveal">The original Wembley board game resolves drawn matches with a coin toss. Simple — but a penalty shootout is the most dramatic moment in football, and a coin flip felt like a missed opportunity. The decision to redesign it went through four iterations before it was right.</p>
+    <h2 class="section-heading reveal">What the first user test found.</h2>
+    <p class="section-intro reveal">The first proper user test was a live game session. Four findings came out of it.</p>
+
+    <div class="findings-list">
+      <div class="finding-item reveal reveal-delay-1">
+        <p class="finding-num">1</p>
+        <div>
+          <p class="finding-title">A penalty bug caused confusion</p>
+          <p class="finding-desc">A scoring bug in the penalty shootout sequence produced incorrect results. Found, flagged, and fixed.</p>
+        </div>
+      </div>
+      <div class="finding-item reveal reveal-delay-2">
+        <p class="finding-num">2</p>
+        <div>
+          <p class="finding-title">"Won on penalties" felt anticlimactic</p>
+          <p class="finding-desc">The original board game resolves draws with a coin toss — random but instant. The first digital version replaced it with static text: technically more realistic, but in practice less dramatic. It needed a sequence.</p>
+        </div>
+      </div>
+      <div class="finding-item reveal reveal-delay-3">
+        <p class="finding-num">3</p>
+        <div>
+          <p class="finding-title">The old interface didn't connect to the board game</p>
+          <p class="finding-desc">The v1 UI was dark navy — functional, but with no visual connection to the box art, the green pitch, or the aesthetic of the game itself.</p>
+        </div>
+      </div>
+      <div class="finding-item reveal reveal-delay-4">
+        <p class="finding-num">4</p>
+        <div>
+          <p class="finding-title">The overall feel was flat — it needed animation</p>
+          <p class="finding-desc">Without animations, the match felt like form-filling rather than a game. Results appeared — they didn't arrive. This needed to feel like a broadcast.</p>
+        </div>
+      </div>
+    </div>
+
+    <figure class="section-figure reveal">
+      <img src="wembley-assets/images/wembley6.png" alt="v1 app — dark navy UI, Arsenal vs Tottenham, International Stars dropdowns. Before the Classic green skin redesign." loading="lazy">
+      <figcaption>v1 — dark navy UI, functional but no connection to the board game</figcaption>
+    </figure>
+
+    <div class="subsection-spacer"></div>
+    <p class="subsection-label reveal">UI — Skins &amp; Logo</p>
+    <p class="section-intro reveal" style="margin-top:0">The v1 feedback led directly to a rebuild. Two skins, each designed for a different relationship with the source material.</p>
+
+    <div class="ui-panel reveal" style="margin-bottom:16px;">
+      <p class="ui-panel-title">Skins</p>
+      <p class="ui-panel-desc">Two skins built for two audiences: the Classic 2016 skin uses a green pitch background faithful to the board game's palette — built directly in response to v1 feedback that the dark navy UI didn't connect to the game. The Sky skin is dark blue with red accents, inspired by Saturday afternoons watching results arrive via the vidiprinter.</p>
+      <div class="skins-grid">
+        <figure>
+          <img src="wembley-assets/images/wembley4.png" alt="Classic 2016 skin — green pitch, board game palette" loading="lazy">
+          <figcaption>Classic 2016 — green pitch, board game palette</figcaption>
+        </figure>
+        <figure>
+          <img src="wembley-assets/images/wembley5a.png" alt="Sky skin — dark blue, broadcast aesthetic" loading="lazy">
+          <figcaption>Sky — dark blue, broadcast aesthetic</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="ui-panel reveal" style="margin-bottom:16px;">
+      <p class="ui-panel-title">Logo</p>
+      <p class="ui-panel-desc">The later Gibsons edition logo had the right character — the FA Cup trophy rendered in crosshatched detail, the lettering genuinely considered. The redesign used that as its reference: a badge format with the trophy overlapping the wordmark, bold type, a pennant framing the lettering. More detail than a flat modern logo, more web-appropriate than scanning the box art.</p>
+      <div class="logo-pair">
+        <figure>
+          <img src="wembley-assets/images/wembley13_old.webp" alt="Original Gibsons edition logo — vintage red box" loading="lazy">
+          <figcaption>Original Gibsons edition — the design reference</figcaption>
+        </figure>
+        <figure>
+          <img src="wembley-assets/images/wembley13_new.png" alt="Redesigned Wembley logo" loading="lazy" style="object-fit:contain;background:#1a3a1a;">
+          <figcaption>Redesign — heritage brought forward for web</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="ui-panel reveal" style="margin-bottom:16px;">
+      <p class="ui-panel-title">Club Badges</p>
+      <p class="ui-panel-desc">All 32 teams from the 2016 Gibsons edition represented with custom-designed badges. The round badge format was a deliberate choice — it feels like a game counter, descended from the physical tokens. Testing confirmed it: the badges weren't licensed but were the first thing players commented on.</p>
+      <p class="ui-attribution">Badge icons sourced using components from <a href="https://game-icons.net/" target="_blank" rel="noopener">game-icons.net</a></p>
+      <figure>
+        <img src="wembley-assets/images/wembley12.png" alt="All 32 custom badges in a grid — round format on green background" loading="lazy" style="width:100%;display:block;margin-top:16px;border-radius:var(--radius);border:1px solid var(--border);">
+        <figcaption style="font-size:12px;color:var(--text-dim);margin-top:8px;">All 32 custom-designed club badges — 2016 Gibsons edition</figcaption>
+      </figure>
+    </div>
+
+    <div class="subsection-spacer"></div>
+
+    <p class="subsection-label reveal">The penalty shootout</p>
+    <p class="penalty-intro reveal">The original Wembley board game resolves drawn matches with a coin toss. Simple — but a penalty shootout is the most dramatic moment in football, and a coin flip felt like a missed opportunity. The decision to redesign it went through four iterations before it was right.</p>
+
+    <figure class="section-figure reveal">
+      <img src="wembley-assets/images/wembley_pens_broadcast.png" alt="Broadcast reference — UEFA Euro penalty bar showing Portugal 5–3 Poland, green and red circles, kick-by-kick" loading="lazy">
+      <figcaption>Broadcast reference — UEFA Euro penalty bar, kick-by-kick circles. The model for v2.</figcaption>
+    </figure>
+
     <div class="penalty-progression">
       <div class="penalty-step reveal reveal-delay-1">
-        <img src="wembley-assets/Screenshot%202026-05-25%20103938.png" alt="Match report with penalty trigger" loading="lazy">
+        <img src="wembley-assets/images/wembley1a.png" alt="v1 penalty result — static text announcing winner, no sequence" loading="lazy">
         <div class="penalty-step-caption">
-          <p class="penalty-step-label">v1 — The trigger</p>
-          <p class="penalty-step-desc">The match report shows the draw after 90 minutes and a "Start Penalty Shoot Out" button — replacing the original coin toss rule entirely.</p>
+          <p class="penalty-step-label">v1 — "Won on penalties"</p>
+          <p class="penalty-step-desc">The match report simply announced a winner. It replaced the coin toss mechanically but delivered no drama. The moment was flat.</p>
         </div>
       </div>
       <div class="penalty-step reveal reveal-delay-2">
-        <img src="wembley-assets/Screenshot%202026-05-25%20103946.png" alt="Penalty shootout — circles starting" loading="lazy">
+        <img src="wembley-assets/images/wembley1b.png" alt="v2 penalty — Start Penalty Shoot Out button on the draw match report" loading="lazy">
         <div class="penalty-step-caption">
-          <p class="penalty-step-label">v2 — Live circles</p>
-          <p class="penalty-step-desc">Redesigned as a live sequence: two columns of five circles, one per kick, filling in progressively. A scoring bug was found and fixed during this build.</p>
+          <p class="penalty-step-label">v2 — A live broadcast sequence</p>
+          <p class="penalty-step-desc">Redesigned as a progressive sequence: a "Start Penalty Shoot Out" button triggering a live display. Modelled on how a shootout is shown on TV.</p>
         </div>
       </div>
       <div class="penalty-step reveal reveal-delay-3">
-        <img src="wembley-assets/Screenshot%202026-05-25%20103953.png" alt="Penalty shootout — white circles" loading="lazy">
+        <img src="wembley-assets/images/wembley1c.png" alt="v3 penalty — ambiguous colour coding, circles indistinguishable between teams" loading="lazy">
         <div class="penalty-step-caption">
-          <p class="penalty-step-label">v3 — The problem</p>
-          <p class="penalty-step-desc">White circles for goals looked identical for both teams regardless of club colours. The information wasn't there to read the shootout at a glance.</p>
+          <p class="penalty-step-label">v3 — The colour problem</p>
+          <p class="penalty-step-desc">White circles for goals, red for misses. But Arsenal (red) made the circles indistinguishable — a red "miss" and an Arsenal goal looked identical.</p>
         </div>
       </div>
       <div class="penalty-step reveal reveal-delay-4">
-        <img src="wembley-assets/Screenshot%202026-05-25%20103958.png" alt="Penalty shootout — team colours" loading="lazy">
+        <div class="img-placeholder">
+          <p class="img-placeholder-icon">📸</p>
+          <p class="img-placeholder-label">v4 screenshot coming — final version with "Scored" / "Missed" labels visible</p>
+        </div>
         <div class="penalty-step-caption">
           <p class="penalty-step-label">v4 — Fixed</p>
-          <p class="penalty-step-desc">Team colours applied per circle, plus "Scored" and "Missed" labels added. Each kick now reads as a clear result — the version that shipped.</p>
+          <p class="penalty-step-desc">"Scored" and "Missed" labels added per kick. Team colours applied per circle. Consistent with the plain-language principle running through the rest of the app.</p>
         </div>
       </div>
     </div>
+
     <div class="decision-callout reveal" style="margin-top:24px;">
-      <p class="decision-callout-label">The detail</p>
-      <p class="decision-callout-text">OPTA data suggests 80% of penalties are scored in professional football. Matching each kick to that same probability means all possible shootout outcomes — from 5–0 to sudden-death — are genuinely in play, rather than penalties feeling like a formality or reusing predetermined patterns.</p>
+      <p class="decision-callout-label">The probability</p>
+      <p class="decision-callout-text">OPTA data puts professional penalty conversion at ~80%. Matching each kick to that probability means all possible outcomes — from 5–0 to sudden death — are genuinely in play.</p>
     </div>
+
+    <div class="subsection-spacer"></div>
+
+    <p class="subsection-label reveal">The match card collision</p>
+    <p class="section-intro reveal" style="margin-top:0">When a player clicks "Play Match", the two team cards animate into each other — a direct reference to the graphic collision used in sports broadcast pre-match packages.</p>
+    <div class="img-placeholder reveal" style="margin-bottom:40px;">
+      <p class="img-placeholder-icon">🎬</p>
+      <p class="img-placeholder-label">Card collision animation — consider a short screen recording or Figma mockup showing the cards at mid-collision</p>
+    </div>
+
+    <p class="subsection-label reveal">The final — ticker tape</p>
+    <p class="section-intro reveal" style="margin-top:0">The final needed to feel different to every other round. The solution was a ticker tape effect in the winning team's colours. Testing focused on speed and ensuring it didn't crash on repeat. Both fixed before shipping.</p>
+    <figure class="section-figure reveal" style="margin-bottom:0">
+      <img src="wembley-assets/images/wembley7.png" alt="FA Cup Final result — Arsenal 1–4 Tottenham, ticker tape in Tottenham colours visible across the full screen" loading="lazy">
+      <figcaption>FA Cup Final — ticker tape in the winning team's colours</figcaption>
+    </figure>
   </section>
 
   <div class="section-divider"></div>
 
-  <!-- NICE TOUCHES -->
-  <section class="content-section" id="s-nice-touches">
-    <p class="section-eyebrow reveal">Nice touches</p>
+  <!-- FEATURES -->
+  <section class="content-section" id="s-features">
+    <p class="section-eyebrow reveal">Feature highlights</p>
     <h2 class="section-heading reveal">The details that make it feel real.</h2>
 
-    <!-- Cup Heroes -->
     <p class="subsection-label reveal">Cup Heroes</p>
-    <p class="section-intro reveal" style="margin-top:0">The original board game had nameless coloured tokens — a green one for a striker, a yellow one for a defender. Each one guaranteed to deliver. The redesign gave them names, faces, and doubt.</p>
+    <p class="section-intro reveal" style="margin-top:0">The original board game had nameless coloured tokens — a green one for a striker, a yellow one for a defender. Each guaranteed to deliver. The redesign gave them names, faces, and doubt.</p>
 
     <div class="heroes-intro reveal">
       <p class="heroes-intro-title">From tokens to characters</p>
-      <p class="heroes-intro-desc">In the physical game, International Stars were guaranteed: if you played a star striker, they added a goal, every time. That certainty was also the problem — in a game with star-heavy teams, you could guarantee a 3-goal advantage before a die was rolled, which broke the balance entirely. The digital redesign kept the token concept but introduced probability and personality. Now you choose Ashley Cole when you need a serial winner at the back. You pick Steven Gerrard for the big moments. Still a token mechanic — but one with stakes, character, and a reason to care about who you select. Each player is individually illustrated in a hand-drawn Roy of the Rovers comic style.</p>
+      <p class="heroes-intro-desc">In the physical game, International Stars were guaranteed: play a star striker and they added a goal, every time. That certainty was also the problem — in a game with star-heavy teams, you could guarantee a 3-goal advantage before a die was rolled. The digital redesign kept the token concept but introduced probability and personality.<br><br>Now you choose Ashley Cole when you need a serial winner at the back. You pick Steven Gerrard for the big moments. Still a token mechanic — but one with stakes, character, and a reason to care about who you select. Each player is individually illustrated in a hand-drawn Roy of the Rovers comic style.<br><br><strong style="color:var(--text);font-weight:500;">International Stars remain the default.</strong> Early feedback from a BGG user was clear: the named Cup Heroes system didn't map onto their version of the game. International Stars needed to stay as the default option, with Cup Heroes available as an alternative. Both systems now coexist — the tension was real, and the solution was to not resolve it.</p>
+    </div>
+
+    <div style="margin-top:16px;" class="reveal">
+      <figure style="border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;">
+        <img src="wembley-assets/images/wembley2.png" alt="Cup Heroes selection modal — full screen with hand-drawn illustrated players in a Roy of the Rovers style" loading="lazy" style="width:100%;display:block;">
+        <figcaption style="padding:12px 16px;font-size:12px;color:var(--text-dim);background:var(--bg-card);border-top:1px solid var(--border);">Cup Heroes modal — hand-drawn illustrations in a Roy of the Rovers style. Locked cards unlock through play.</figcaption>
+      </figure>
     </div>
 
     <div class="heroes-mechanics">
@@ -372,66 +579,120 @@ This is its digital companion: building on the original mechanics, delivering st
       </div>
     </div>
 
-    <div style="margin-top:16px;">
-      <figure style="border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;">
-        <img src="wembley-assets/Screenshot%202026-05-25%20103827.png" alt="Cup Heroes selection modal" loading="lazy" style="width:100%;display:block;">
-        <figcaption style="padding:12px 16px;font-size:12px;color:var(--text-dim);background:var(--bg-card);border-top:1px solid var(--border);">Cup Heroes modal — hand-drawn illustrations in a Roy of the Rovers style. Locked cards unlock through play.</figcaption>
-      </figure>
-    </div>
-
     <div class="decision-callout reveal" style="margin-top:16px;">
       <p class="decision-callout-label">How discovery works</p>
-      <p class="decision-callout-text">Secondary bonuses aren't listed in the UI — they're found by playing. Didier Drogba has a 100% chance to score whenever he plays at Wembley, referencing his 4 goals in 4 finals. You don't know that when you pick him. You find out when the unique score event appears. Dave Beasant saves a penalty for an underdog team at Wembley. Steven Gerrard has a 20% chance to save his team from a loss. Ashley Cole's secondary is a guaranteed contribution — dependable, as advertised. Each bonus is grounded in the player's real Wembley history, which means discovering them feels like recognition rather than reward.</p>
-    </div>
-
-    <!-- UI: Badges, Skins, Logo -->
-    <div class="subsection-spacer"></div>
-    <p class="subsection-label reveal">UI — Badges, Skins &amp; Logo</p>
-    <p class="section-intro reveal" style="margin-top:0">Three visual decisions that give the app its identity — each one rooted in the history of the game rather than designed from scratch.</p>
-
-    <div class="ui-panel reveal" style="margin-bottom:16px;">
-      <p class="ui-panel-title">Club Badges</p>
-      <p class="ui-panel-desc">All 32 teams from the 2016 Gibsons edition are represented with custom-designed badges. Now when Arsenal draw Man Utd in the semi-final, the badges and colours make it real and evoke memories of their legendary rivalry. Testing confirmed it: the badges aren't licensed but were the first thing players commented on.</p>
-      <p class="ui-attribution">Badge icons sourced using components from <a href="https://game-icons.net/" target="_blank" rel="noopener">game-icons.net</a></p>
-      <figure>
-        <img src="wembley-assets/wembley_badges.png" alt="All 32 custom club badges" loading="lazy" style="width:100%;display:block;margin-top:20px;border-radius:var(--radius);border:1px solid var(--border);">
-        <figcaption style="font-size:12px;color:var(--text-dim);margin-top:8px;">All 32 custom-designed club badges — 2016 Gibsons edition</figcaption>
-      </figure>
-    </div>
-
-    <div class="ui-panel reveal" style="margin-bottom:16px;">
-      <p class="ui-panel-title">Skins</p>
-      <p class="ui-panel-desc">Two skins built for two audiences: the Classic 2016 skin uses a green pitch background faithful to the board game's palette to feel like an extension of the physical box. The Sky skin is dark blue with red accents, inspired by spending Saturday afternoons in the 2000s watching your team's fortunes via the vidiprinter.</p>
-      <div class="skins-grid">
-        <figure>
-          <img src="wembley-assets/Screenshot%202026-05-25%20103708.png" alt="Classic 2016 skin" loading="lazy">
-          <figcaption>Classic 2016 — green pitch, board game palette</figcaption>
-        </figure>
-        <figure>
-          <img src="wembley-assets/Screenshot%202026-05-25%20103800.png" alt="Sky skin" loading="lazy">
-          <figcaption>Sky — dark blue, broadcast aesthetic</figcaption>
-        </figure>
-      </div>
-    </div>
-
-    <div class="ui-panel reveal">
-      <p class="ui-panel-title">Logo</p>
-      <p class="ui-panel-desc">The later Gibsons edition logo had the right character — the FA Cup trophy rendered in intricate crosshatched detail, the lettering feeling genuinely considered. The redesign for the web release used that as its reference: a badge format with the trophy overlapping the wordmark, bold type, a pennant framing the lettering. More detail than a flat modern logo, more web-appropriate than scanning the box art.</p>
-      <div class="logo-pair">
-        <figure>
-          <img src="wembley-assets/retro_logo2.webp" alt="Later Gibsons edition logo" loading="lazy">
-          <figcaption>Later Gibsons edition — the design reference</figcaption>
-        </figure>
-        <figure>
-          <img src="wembley-assets/wembley_logo.png" alt="Redesigned Wembley logo" loading="lazy" style="object-fit:contain;background:#1a3a1a;">
-          <figcaption>Redesign — heritage brought forward for web</figcaption>
-        </figure>
-      </div>
+      <p class="decision-callout-text">Secondary bonuses aren't listed in the UI — they're found by playing. Didier Drogba has a 100% chance to score whenever he plays at Wembley, referencing his 4 goals in 4 finals. Dave Beasant saves a penalty for an underdog team at Wembley. Steven Gerrard has a 20% chance to save his team from a loss. Each bonus is grounded in real Wembley history, which means discovering them feels like recognition rather than reward.</p>
     </div>
 
   </section>
 
   <div class="section-divider"></div>
+
+  <!-- WHAT WE MEASURED -->
+  <section class="content-section" id="s-results">
+    <p class="section-eyebrow reveal">What we measured</p>
+    <h2 class="section-heading reveal">The first three days after going live.</h2>
+    <p class="section-intro reveal">After posting to the BoardGameGeek forum, Supabase was used to track key events. The data below covers the first three days after launch.</p>
+
+    <div class="stat-grid reveal">
+      <div class="stat-card">
+        <p class="stat-number">21</p>
+        <p class="stat-label">Matches Completed</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number">10</p>
+        <p class="stat-label">Unique Visitors</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number">100%</p>
+        <p class="stat-label">Penalty Completion</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number">9</p>
+        <p class="stat-label">Most Wins<br>Arsenal</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number">0</p>
+        <p class="stat-label">Cup Heroes Used</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number">45</p>
+        <p class="stat-label">Team Select Drop-offs</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number">100%</p>
+        <p class="stat-label">Classic Skin</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number">5</p>
+        <p class="stat-label">Finals Played</p>
+      </div>
+    </div>
+
+    <div class="subsection-spacer"></div>
+    <p class="subsection-label reveal">What the data shows</p>
+
+    <div class="findings-list">
+      <div class="finding-item reveal">
+        <p class="finding-num">→</p>
+        <div>
+          <p class="finding-title">The Rochdale story</p>
+          <p class="finding-desc">One mobile user played a complete FA Cup run in a single session: Rochdale beat Chelsea 5–2 in the quarter-final, beat Arsenal 5–3 in the semi-final, then lost to Leeds United 3–1 in the final. No Cup Heroes, default bracket, Brave on iPhone. The game sustained a full tournament without friction — and produced exactly the kind of giant-killing drama it was designed for.</p>
+        </div>
+      </div>
+      <div class="finding-item reveal reveal-delay-1">
+        <p class="finding-num">→</p>
+        <div>
+          <p class="finding-title">The dropdown problem is confirmed</p>
+          <p class="finding-desc">Arsenal and Tottenham combined appeared in 93% of all match starts. The dropdown was opened only 6 times. Players aren't changing the defaults, and the data backs up why.</p>
+        </div>
+      </div>
+      <div class="finding-item reveal reveal-delay-2">
+        <p class="finding-num">→</p>
+        <div>
+          <p class="finding-title">Drop-off at team select is 2× completions</p>
+          <p class="finding-desc">45 drop-off events at team select vs 21 completed matches. The point of maximum friction is the point where the game should feel like it's starting.</p>
+        </div>
+      </div>
+      <div class="finding-item reveal reveal-delay-3">
+        <p class="finding-num">→</p>
+        <div>
+          <p class="finding-title">The penalty shootout is an engagement signal</p>
+          <p class="finding-desc">1 match went to penalties. All 10 kicks tracked from start to finish — 100% completion rate on the feature that went through the most iteration.</p>
+        </div>
+      </div>
+      <div class="finding-item reveal reveal-delay-4">
+        <p class="finding-num">→</p>
+        <div>
+          <p class="finding-title">Cup Heroes haven't been used yet</p>
+          <p class="finding-desc">Across all 21 completed matches: 0 Cup Heroes selected. 3 drop-off events recorded at the hero select stage — players reached it but didn't commit. A discovery problem, not an interest problem.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection-spacer"></div>
+    <p class="subsection-label reveal">Testing priorities</p>
+    <div class="testing-priorities">
+      <div class="priority-item reveal reveal-delay-1">
+        <p class="priority-eyebrow">Priority 1</p>
+        <p class="priority-title">Dropdown — make team changing visible</p>
+        <p class="priority-context">45 drop-offs at team select, 6 dropdown opens, 93% default teams. The dropdown isn't communicating that it opens.</p>
+        <p class="priority-metric"><strong>Success metric:</strong> % matches using non-default teams rises from ~7% toward 25%+.</p>
+      </div>
+      <div class="priority-item reveal reveal-delay-2">
+        <p class="priority-eyebrow">Priority 2</p>
+        <p class="priority-title">Cup Heroes — fix the discovery problem</p>
+        <p class="priority-context">0 uses across 21 matches. 3 players reached the hero select screen and dropped off.</p>
+        <p class="priority-metric"><strong>Success metric:</strong> Cup Heroes used in at least 1 in 5 matches.</p>
+      </div>
+      <div class="priority-item reveal reveal-delay-3">
+        <p class="priority-eyebrow">Priority 3</p>
+        <p class="priority-title">Skins — make the Sky option feel like a real choice</p>
+        <p class="priority-context">100% Classic. Sky has never been used in a completed match.</p>
+        <p class="priority-metric"><strong>Success metric:</strong> Sky used in at least 1 in 10 matches.</p>
+      </div>
+    </div>
+  </section>
 
   <!-- QUOTES -->
   <section class="content-section" id="s-quotes">
@@ -452,9 +713,23 @@ This is its digital companion: building on the original mechanics, delivering st
       </div>
       <div class="quote-block reveal reveal-delay-4">
         <p class="quote-text">The ticker tape in the final is a very nice touch. I loved the penalty shootout — on my version it's replays, but this is much better. I would probably delay the timing of the pens a little to add drama.</p>
-        <p class="quote-author">Gary — BoardGameGeek user</p>
+        <p class="quote-author">Gary — BoardGameGeek</p>
       </div>
     </div>
+    <div class="bgg-feedback reveal">
+      <figure>
+        <img src="wembley-assets/images/wembley11.png" alt="Gary's BGG review — ticker tape, penalties, edition mismatch feedback" loading="lazy">
+        <figcaption>Gary's full review — BoardGameGeek forum thread</figcaption>
+      </figure>
+      <figure>
+        <img src="wembley-assets/images/wembley11b.png" alt="BGG response from dagbo — Great piece of work!" loading="lazy">
+        <figcaption>@dagbo — BoardGameGeek forum thread</figcaption>
+      </figure>
+    </div>
+    <a href="https://boardgamegeek.com/thread/3719585/wembley-game-companion-app" target="_blank" rel="noopener" class="bgg-link reveal">
+      View BGG thread
+      <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
   </section>
 
   <!-- REFLECTIONS -->
@@ -466,14 +741,14 @@ This is its digital companion: building on the original mechanics, delivering st
         <p class="reflection-marker">↩</p>
         <div>
           <p class="reflection-title">More iteration on the setup screen</p>
-          <p class="reflection-desc">The setup screen is the first impression of the app. I had strong reference material — FIFA kick-off screens, TV highlights shows — but went straight into a layout without enough early exploration. That screen deserved more time. It's the moment before the game starts and it should feel like one.</p>
+          <p class="reflection-desc">The setup screen is the first impression of the app. It deserved more time. It's the moment before the game starts and it should feel like one.</p>
         </div>
       </div>
       <div class="reflection-item reveal reveal-delay-1">
         <p class="reflection-marker">↩</p>
         <div>
           <p class="reflection-title">Establish structure before visual richness</p>
-          <p class="reflection-desc">I went deep into the colour palette and image-based backgrounds before the UI structure was stable. It looked good early, but made changes harder to make later. I'd lock the layout and mechanics first, then add visual richness once the structure was solid.</p>
+          <p class="reflection-desc">I went deep into the colour palette and image-based backgrounds before the UI structure was stable. It looked good early, but made changes harder to make later. Lock the layout and mechanics first, then add visual richness once the structure is solid.</p>
         </div>
       </div>
       <div class="reflection-item reveal reveal-delay-2">
@@ -486,8 +761,15 @@ This is its digital companion: building on the original mechanics, delivering st
       <div class="reflection-item reveal reveal-delay-3">
         <p class="reflection-marker">↩</p>
         <div>
-          <p class="reflection-title">Named players vs. generic stars</p>
-          <p class="reflection-desc">The decision to give Cup Heroes real names — Dave Beasant, Steven Gerrard, Ashley Cole — was deliberate: personality, discovery, and real Wembley history baked into the selection. Early feedback validated it. But a user from BoardGameGeek raised the flip side: selecting the same named players for different clubs felt odd. Their preference was for generic "unnamed stars" — the token approach of the original board game. This is a genuine design tension between personality and immersion, and it's worth offering both. A future toggle between named and unnamed mode would resolve it cleanly without abandoning either approach.</p>
+          <p class="reflection-title">Building in the browser shaped the design — not always positively</p>
+          <p class="reflection-desc">Some features — the International Stars system, the star rating display — were shipped in a state that reflected coding limitations as much as design intent. The gap between what I could imagine and what I could build got smaller with each version. The v2 is what v1 was always trying to be.</p>
+        </div>
+      </div>
+      <div class="reflection-item reveal reveal-delay-4">
+        <p class="reflection-marker">✓</p>
+        <div>
+          <p class="reflection-title">Named players vs. generic stars — resolved with both</p>
+          <p class="reflection-desc">Early feedback raised a valid counter-argument: selecting the same named players for different clubs broke immersion. That led to keeping International Stars as the default, with Cup Heroes as an opt-in. Both systems now coexist — the tension was real, and the solution was to not resolve it.</p>
         </div>
       </div>
     </div>
@@ -506,31 +788,31 @@ This is its digital companion: building on the original mechanics, delivering st
         </div>
       </div>
       <div class="next-step reveal reveal-delay-2">
+        <div class="step-dot wip"></div>
+        <div>
+          <p class="step-title">Edition-aware team management</p>
+          <p class="step-desc">The Wembley board game has been through multiple editions, each with a different team set. Let users select their edition, or customise the team roster entirely. Confirmed as the top functional gap by the BGG community.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-3">
+        <div class="step-dot"></div>
+        <div>
+          <p class="step-title">Dropdown hover state</p>
+          <p class="step-desc">Most sessions don't change the default team. A visible affordance on the dropdown should change that. The data backs it up — 45 drop-offs vs 6 dropdown opens in the first three days.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-4">
         <div class="step-dot"></div>
         <div>
           <p class="step-title">Competition Mode</p>
           <p class="step-desc">Start a new game and the app simulates the full FA Cup draw, loads all 32 teams automatically, and knocks teams out as they lose. A full tournament that runs itself — no manual setup required.</p>
         </div>
       </div>
-      <div class="next-step reveal reveal-delay-3">
-        <div class="step-dot wip"></div>
-        <div>
-          <p class="step-title">Edition-aware team management</p>
-          <p class="step-desc">The Wembley board game has been through multiple editions, each with a different team set. The current app is built around the 2016 Gibsons edition — which means players with earlier or later versions will find teams missing or wrong. The fix isn't adding more hardcoded lists: it's letting users select their edition, or customise the team roster entirely. First feedback from the BGG community confirmed this as the top functional gap.</p>
-        </div>
-      </div>
-      <div class="next-step reveal reveal-delay-4">
-        <div class="step-dot wip"></div>
-        <div>
-          <p class="step-title">Board Game Geek community</p>
-          <p class="step-desc">Wembley ranks 16,927 on BGG with a 6.1 rating — niche, but with a committed fanbase who have been asking for digital versions for years. Early posts to the BGG forum are already generating feedback from the core audience the app was built for.</p>
-        </div>
-      </div>
       <div class="next-step reveal reveal-delay-4">
         <div class="step-dot"></div>
         <div>
           <p class="step-title">Retro Mode</p>
-          <p class="step-desc">The current version is based on the 2016 Gibsons edition, but earlier versions of the game featured different team sets. Retro Mode would release a skin and team roster faithful to those older editions — for players who remember a different version of the game.</p>
+          <p class="step-desc">A skin and team roster faithful to earlier editions — for players who remember a different version of the game. The current version is built around the 2016 Gibsons edition.</p>
         </div>
       </div>
     </div>
@@ -540,7 +822,7 @@ This is its digital companion: building on the original mechanics, delivering st
   <section class="case-cta">
     <h2 class="cta-heading reveal">Move clear of every opponent.</h2>
     <p class="cta-sub reveal reveal-delay-1">Run your own FA Cup. No board required — just the game you remember.</p>
-    <a href="https://d4vidholly.github.io/wembley-game/" target="_blank" rel="noopener" class="cta-btn reveal reveal-delay-2">
+    <a href="https://www.wembley-game.live" target="_blank" rel="noopener" class="cta-btn reveal reveal-delay-2">
       Play Wembley
       <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
@@ -570,12 +852,10 @@ This is its digital companion: building on the original mechanics, delivering st
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // Chapter nav
     const chapterNav = document.getElementById('chapter-nav');
     const chapterItems = document.querySelectorAll('.chapter-nav-item');
     const chapterSections = document.querySelectorAll('[id^="s-"]');
 
-    // Show chapter nav once hero leaves viewport
     const heroEl = document.querySelector('.case-hero');
     if (heroEl) {
       new IntersectionObserver(entries => {
@@ -583,7 +863,6 @@ This is its digital companion: building on the original mechanics, delivering st
       }, { threshold: 0.05 }).observe(heroEl);
     }
 
-    // Highlight active chapter
     const chapterSpy = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -598,6 +877,7 @@ This is its digital companion: building on the original mechanics, delivering st
       });
     }, { threshold: 0.2, rootMargin: '-15% 0px -70% 0px' });
     chapterSections.forEach(s => chapterSpy.observe(s));
+
   </script>
 
 </body>
