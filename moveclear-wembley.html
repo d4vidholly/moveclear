@@ -132,6 +132,10 @@
     @media (max-width: 700px) {
       .penalty-progression, .heroes-mechanics, .logo-pair, .speech-bubbles-grid { grid-template-columns: 1fr; }
       .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .opportunity-list { grid-template-columns: 1fr; }
+      .approach-item { grid-template-columns: 1fr; }
+      .approach-num { font-size: 32px; margin-bottom: 4px; }
+      .hide-mobile { display: none; }
     }
 
     /* Sketch — rotated */
@@ -225,7 +229,7 @@
         <img src="wembley-assets/images/wembley9.webp" alt="The physical 2016 Gibsons edition board game — board and cards in play" loading="lazy">
         <figcaption>The 2016 Gibsons edition — board and cards</figcaption>
       </figure>
-      <figure>
+      <figure class="hide-mobile">
         <img src="wembley-assets/images/wembley9b.webp" alt="The physical 2016 Gibsons edition — dice and prize money in play" loading="lazy">
         <figcaption>Dice and prize money in play</figcaption>
       </figure>
