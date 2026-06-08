@@ -23,59 +23,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:           #09090E;
-      --bg-card:      #0F0F16;
-      --bg-card-hover:#141420;
-      --text:         #EEEEF0;
-      --text-muted:   rgba(238,238,240,0.45);
-      --text-dim:     rgba(238,238,240,0.18);
-      --blue:         #5AC8FA;
-      --border:       rgba(238,238,240,0.07);
-      --border-hover: rgba(238,238,240,0.14);
-      --radius:       14px;
-      --radius-lg:    20px;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Instrument Sans', -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    /* ── NAV ──────────────────────────────────────────────────── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      transition: background 0.4s ease, border-color 0.4s ease;
-      border-bottom: 1px solid transparent;
-    }
-    nav.scrolled {
-      background: rgba(9,9,14,0.82);
-      border-color: var(--border);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-    .nav-mc-logo {
-      height: 16px;
-      width: auto;
-      display: block;
-      transition: opacity 0.2s;
-    }
-    .nav-mc-logo:hover { opacity: 0.8; }
 
     /* ── HERO ─────────────────────────────────────────────────── */
     .hero {
@@ -99,20 +48,9 @@
       pointer-events: none;
     }
 
-    .hero-eyebrow {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--blue);
-      margin-bottom: 32px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.1s forwards;
-    }
-
     .hero-wordmark {
       font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: clamp(72px, 13vw, 160px);
+      font-size: clamp(60px, 11vw, 130px);
       font-weight: 800;
       line-height: 0.92;
       letter-spacing: -0.04em;
@@ -126,8 +64,8 @@
     }
 
     .hero-tagline {
-      margin-top: 36px;
-      font-size: clamp(17px, 2.5vw, 22px);
+      margin-top: 28px;
+      font-size: clamp(15px, 2vw, 19px);
       font-weight: 400;
       color: var(--text-muted);
       letter-spacing: -0.01em;
@@ -168,10 +106,6 @@
       background: linear-gradient(to bottom, var(--blue), transparent);
       animation: pulse-line 2s ease infinite;
     }
-    @keyframes pulse-line {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 1; }
-    }
 
     /* ── STATEMENT ────────────────────────────────────────────── */
     .statement {
@@ -182,7 +116,7 @@
     }
     .statement-text {
       font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: clamp(28px, 4.5vw, 52px);
+      font-size: clamp(22px, 3.2vw, 40px);
       font-weight: 300;
       line-height: 1.18;
       letter-spacing: -0.025em;
@@ -230,29 +164,6 @@
       line-height: 1.55;
       letter-spacing: -0.005em;
       max-width: 400px;
-    }
-    .suite-live-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #34C759;
-      background: rgba(52,199,89,0.08);
-      border: 1px solid rgba(52,199,89,0.18);
-      border-radius: 20px;
-      padding: 6px 13px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .suite-live-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #34C759;
-      animation: pulse-dot 2s ease infinite;
     }
     .products-grid {
       display: grid;
@@ -365,18 +276,17 @@
     .btn-visit svg, .btn-case-study svg { width: 11px; height: 11px; }
 
     .card-status-badge {
-      position: absolute;
-      top: 20px;
-      right: 20px;
       font-size: 10px;
       font-weight: 500;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 20px;
+      padding: 3px 8px;
+      border-radius: 4px;
       display: inline-flex;
       align-items: center;
       gap: 5px;
+      white-space: nowrap;
+      margin-left: auto;
     }
     .card-status-badge.live {
       color: #34C759;
@@ -389,9 +299,9 @@
       border: 1px solid rgba(255,159,10,0.18);
     }
     .card-status-badge.coming-soon {
-      color: var(--text-dim);
-      background: transparent;
-      border: 1px solid var(--border);
+      color: #FF9F0A;
+      background: rgba(255,159,10,0.08);
+      border: 1px solid rgba(255,159,10,0.18);
     }
     .card-live-dot {
       width: 5px;
@@ -434,11 +344,12 @@
     .about-title { font-size: 13px; color: var(--blue); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px; }
     .about-bio { font-size: 15px; line-height: 1.7; color: var(--text-muted); max-width: 520px; }
     .about-ctas { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
-    .about-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 40px; border: 1px solid var(--border-hover); color: var(--text-muted); font-size: 13px; font-weight: 500; text-decoration: none; transition: color 0.2s, border-color 0.2s; white-space: nowrap; }
+    .about-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 40px; border: 1px solid var(--border-hover); color: var(--text-muted); font-size: 13px; font-weight: 500; text-decoration: none; transition: color 0.2s, border-color 0.2s, background 0.2s; white-space: nowrap; }
     .about-cta:hover { color: var(--text); border-color: rgba(238,238,240,0.35); }
     .about-cta svg { width: 12px; height: 12px; transition: transform 0.2s; }
     .about-cta:hover svg { transform: translateX(3px); }
-    @media (max-width: 700px) { .about-layout { flex-direction: column; gap: 24px; align-items: flex-start; } .about-photo { width: 80px; height: 80px; } .about-ctas { flex-direction: row; flex-wrap: wrap; } }
+    .about-cta--blue { color: var(--blue); border-color: rgba(90,200,250,0.3); margin-top: 24px; }
+    .about-cta--blue:hover { color: var(--blue); border-color: rgba(90,200,250,0.6); background: rgba(90,200,250,0.06); }
 
     /* ── CODA ─────────────────────────────────────────────────── */
     .coda {
@@ -470,86 +381,35 @@
     .coda:hover .coda-line span::after { transform: scaleX(1); }
     .coda-byline {
       margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
       font-size: 13px;
       color: var(--text-dim);
       letter-spacing: 0.03em;
     }
-    .coda-byline a {
-      color: var(--text-muted);
-      text-decoration: none;
-      border-bottom: 1px solid var(--border);
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .coda-byline a:hover { color: var(--text); border-color: var(--text-muted); }
+    .coda-dhd-link { border-bottom: none; line-height: 0; }
+    .coda-dhd-logo { height: 32px; width: auto; opacity: 0.45; display: block; transition: opacity 0.2s; }
+    .coda-dhd-link:hover .coda-dhd-logo { opacity: 0.8; }
 
-    /* ── FOOTER ───────────────────────────────────────────────── */
-    footer {
-      padding: 28px 40px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .footer-mc-logo {
-      height: 28px;
-      width: 28px;
-      border-radius: 50%;
-      display: block;
-      opacity: 0.6;
-      transition: opacity 0.2s;
-    }
-    .footer-mc-logo:hover { opacity: 1; }
-    .footer-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      font-size: 12px;
-      color: var(--text-dim);
-      letter-spacing: 0.02em;
-    }
-    /* ── SCROLL REVEALS ───────────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
+    /* ── FOOTER (landing override) ────────────────────────────── */
+    footer { justify-content: center; font-size: 13px; color: var(--text-dim); letter-spacing: 0.02em; }
 
-    /* ── DIVIDER ──────────────────────────────────────────────── */
-    .section-divider {
-      width: 100%;
-      height: 1px;
-      background: var(--border);
-      max-width: 1080px;
-      margin: 0 auto;
-    }
-
-    /* ── ANIMATIONS ───────────────────────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
+    /* ── SECTION DIVIDER (landing override) ──────────────────── */
+    .section-divider { max-width: 1080px; margin: 0 auto; }
 
     /* ── RESPONSIVE ───────────────────────────────────────────── */
     @media (max-width: 700px) {
-      nav { padding: 0 20px; }
       .products-grid { grid-template-columns: 1fr; }
       .product-card { padding: 28px 24px 24px; }
       .products-header { flex-direction: column; gap: 14px; }
       .card-actions { flex-wrap: wrap; }
-      footer { flex-direction: column; gap: 8px; text-align: center; }
+      footer { padding: 20px 24px; }
       .hero-scroll { display: none; }
+      .about-layout { flex-direction: column; gap: 24px; align-items: flex-start; }
+      .about-photo { width: 80px; height: 80px; }
+      .about-ctas { flex-direction: row; flex-wrap: wrap; }
     }
 
     @media (max-width: 500px) {
@@ -566,7 +426,6 @@
 
   <!-- HERO -->
   <section class="hero">
-    <p class="hero-eyebrow">Move Clear Labs</p>
     <h1 class="hero-wordmark">
       Move<span class="c">Clear</span>
     </h1>
@@ -597,19 +456,15 @@
         <p class="products-label">the Lineup</p>
         <p class="products-tagline">Not your typical case studies. These are unapologetically niche tools built for people who care too much.</p>
       </div>
-      <span class="suite-live-badge">
-        <span class="suite-live-dot"></span>
-        Live
-      </span>
     </div>
     <div class="products-grid">
 
       <div class="product-card reveal reveal-delay-1" data-product="predictor">
-        <span class="card-status-badge live"><span class="card-live-dot"></span>Live</span>
         <div class="card-tag-row">
-          <span class="card-tag accent">Football</span>
-          <span class="card-tag">UX Design</span>
-          <span class="card-tag">Web App</span>
+          <span class="card-tag">Sport</span>
+          <span class="card-tag accent">Product</span>
+          <span class="card-tag">Website</span>
+          <span class="card-status-badge live"><span class="card-live-dot"></span>Live</span>
         </div>
         <p class="card-name">Boro Predictor</p>
         <p class="card-subtitle">Season Score Predictor</p>
@@ -621,11 +476,11 @@
       </div>
 
       <div class="product-card reveal reveal-delay-2" data-product="wembley">
-        <span class="card-status-badge live"><span class="card-live-dot"></span>Live</span>
         <div class="card-tag-row">
-          <span class="card-tag accent">FA Cup</span>
-          <span class="card-tag">Front-End</span>
+          <span class="card-tag">Games</span>
+          <span class="card-tag accent">UX Design</span>
           <span class="card-tag">Web App</span>
+          <span class="card-status-badge live"><span class="card-live-dot"></span>Live</span>
         </div>
         <p class="card-name">Wembley</p>
         <p class="card-subtitle">FA Cup Board Game Companion</p>
@@ -636,12 +491,12 @@
         </div>
       </div>
 
-      <div class="product-card reveal reveal-delay-3" data-product="tag">
-        <span class="card-status-badge live"><span class="card-live-dot"></span>Live</span>
+      <div class="product-card locked reveal reveal-delay-3" data-product="tag">
         <div class="card-tag-row">
-          <span class="card-tag accent">Running</span>
-          <span class="card-tag">UX Design</span>
-          <span class="card-tag">Data</span>
+          <span class="card-tag">Sport</span>
+          <span class="card-tag accent">UX Design</span>
+          <span class="card-tag">Web App</span>
+          <span class="card-status-badge coming-soon">Coming Soon</span>
         </div>
         <p class="card-name">TAG Running</p>
         <p class="card-subtitle">True Age Grading</p>
@@ -653,11 +508,11 @@
       </div>
 
       <div class="product-card locked reveal reveal-delay-4" data-product="wnf">
-        <span class="card-status-badge coming-soon"><svg viewBox="0 0 11 13" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:10px;height:10px"><rect x="0.65" y="5.65" width="9.7" height="6.7" rx="1.65" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 5.5V3.5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Coming soon</span>
         <div class="card-tag-row">
-          <span class="card-tag accent">Football</span>
-          <span class="card-tag">Product Design</span>
+          <span class="card-tag">Sport</span>
+          <span class="card-tag accent">Product Design</span>
           <span class="card-tag">Web App</span>
+          <span class="card-status-badge coming-soon">Coming Soon</span>
         </div>
         <p class="card-name">WNF Manager</p>
         <p class="card-subtitle">Football Team Organiser</p>
@@ -677,15 +532,19 @@
         <div class="about-text">
           <h2 class="about-name">David Holly</h2>
           <p class="about-title">Product Designer</p>
-          <p class="about-bio">UX and Product Designer who identifies problems worth solving and moves them all the way to shipped. The work here is sports-obsessed — the skills aren't. If you've got a community worth designing for, a process that deserves better than a spreadsheet, or an idea that's been sitting in your notes too long, I'm interested.</p>
+          <p class="about-bio">UX and Product Designer who identifies problems worth solving and moves them all the way to shipped. The work here is sports-obsessed, the skills are transferable. If you've got a community worth designing for, a process that deserves better than a spreadsheet, or an idea that's been sitting in your notes too long, I'm interested.</p>
+          <a href="mailto:davidhollyux@gmail.com" class="about-cta about-cta--blue">
+            Get in touch
+            <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
         <div class="about-ctas">
           <a href="https://www.linkedin.com/in/davidhollydesign/" target="_blank" rel="noopener" class="about-cta">
             LinkedIn
             <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
-          <a href="mailto:davidhollyux@gmail.com" class="about-cta">
-            Get in touch
+          <a href="david-holly-cv.html" class="about-cta">
+            Resume
             <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </div>
@@ -700,16 +559,14 @@
       <span>See clear.</span> Move clear.
     </p>
     <p class="coda-byline reveal reveal-delay-2">
-      Move Clear Labs &mdash; a product studio by <a href="https://d4vidholly.github.io/" target="_blank" rel="noopener">DHD</a>
+      <span>A product studio by</span>
+      <a href="https://www.davidhollydesign.com" target="_blank" rel="noopener" class="coda-dhd-link"><img src="DHD_logo.png" alt="DHD" class="coda-dhd-logo"></a>
     </p>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <a href="#"><img src="MC_round.png" alt="Move Clear" class="footer-mc-logo"></a>
-    <span class="footer-right">
-      <span>&copy; 2026 Move Clear Labs</span>
-    </span>
+    <span>&copy; 2026 Move Clear Labs</span>
   </footer>
 
   <script>

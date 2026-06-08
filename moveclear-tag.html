@@ -21,453 +21,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --accent: #C8FF47; --accent-rgb: 200,255,71; }
 
-    :root {
-      --bg:           #09090E;
-      --bg-card:      #0F0F16;
-      --bg-card-hover:#141420;
-      --text:         #EEEEF0;
-      --text-muted:   rgba(238,238,240,0.45);
-      --text-dim:     rgba(238,238,240,0.18);
-      --blue:         #5AC8FA;
-      --border:       rgba(238,238,240,0.07);
-      --border-hover: rgba(238,238,240,0.14);
-      --radius:       14px;
-      --radius-lg:    20px;
-      --accent:       #C8FF47;
-      --accent-rgb:   200,255,71;
-    }
+    /* Comparison screenshots grid */
+    .comparison-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 48px; }
+    .comparison-grid figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .comparison-grid img { width: 100%; display: block; filter: brightness(0.85) saturate(0.7); }
+    .comparison-grid figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); letter-spacing: 0.02em; }
 
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Instrument Sans', -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
+    /* Challenge intro text */
+    .challenge-intro { font-size: 16px; line-height: 1.7; color: var(--text-muted); max-width: 640px; margin-bottom: 12px; margin-top: -24px; }
 
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      transition: background 0.4s ease, border-color 0.4s ease;
-      border-bottom: 1px solid transparent;
-    }
-    nav.scrolled {
-      background: rgba(9,9,14,0.85);
-      border-color: var(--border);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-    .nav-back {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 13px;
-      transition: color 0.2s, opacity 0.2s;
-    }
-    .nav-back:hover { color: var(--text); opacity: 0.8; }
-    .nav-back svg { width: 14px; height: 14px; }
-    .nav-mc-logo { height: 16px; width: auto; display: block; }
-    .nav-wordmark {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      text-decoration: none;
-    }
-    .nav-wordmark .c { color: var(--blue); }
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 16px;
-      border-radius: 40px;
-      border: 1px solid rgba(var(--accent-rgb), 0.35);
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      text-decoration: none;
-      transition: background 0.2s, border-color 0.2s;
-    }
-    .nav-cta:hover {
-      background: rgba(var(--accent-rgb), 0.08);
-      border-color: rgba(var(--accent-rgb), 0.6);
-    }
-
-    /* HERO */
-    .case-hero {
-      padding: 140px 24px 100px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .hero-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 36px;
-    }
-    .tag {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      padding: 5px 12px;
-      border-radius: 40px;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-    }
-    .tag.accent {
-      color: var(--accent);
-      border-color: rgba(var(--accent-rgb), 0.3);
-      background: rgba(var(--accent-rgb), 0.06);
-    }
-    .hero-name {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: clamp(56px, 10vw, 112px);
-      font-weight: 800;
-      line-height: 0.92;
-      letter-spacing: -0.04em;
-      color: var(--text);
-      opacity: 0;
-      animation: fadeUp 0.9s ease 0.1s forwards;
-    }
-    .hero-name span { color: var(--accent); }
-    .hero-subtitle {
-      margin-top: 20px;
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: clamp(18px, 2.8vw, 28px);
-      font-weight: 300;
-      color: var(--text-muted);
-      letter-spacing: -0.02em;
-      opacity: 0;
-      animation: fadeUp 0.9s ease 0.25s forwards;
-    }
-    .hero-intro {
-      margin-top: 28px;
-      font-size: 17px;
-      line-height: 1.65;
-      color: var(--text-muted);
-      max-width: 620px;
-      opacity: 0;
-      animation: fadeUp 0.9s ease 0.4s forwards;
-    }
-    .hero-divider {
-      margin-top: 64px;
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      opacity: 0.25;
-    }
-
-    /* HERO IMAGE */
-    .hero-image {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
-    .hero-image img {
-      width: 100%;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      display: block;
-    }
-
-    /* CONTENT */
-    .content-section {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 24px 100px;
-    }
-
-    .section-eyebrow {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 28px;
-    }
-    .section-heading {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      color: var(--text);
-      margin-bottom: 48px;
-    }
-
-    /* CHALLENGE GRID */
-    .challenge-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-    .challenge-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px;
-      position: relative;
-      overflow: hidden;
-    }
-    .challenge-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      opacity: 0.4;
-    }
-    .challenge-num {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: 48px;
-      font-weight: 800;
-      color: rgba(var(--accent-rgb), 0.1);
-      line-height: 1;
-      margin-bottom: 16px;
-      letter-spacing: -0.04em;
-    }
-    .challenge-title {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
-    .challenge-desc {
-      font-size: 14px;
-      line-height: 1.65;
-      color: var(--text-muted);
-    }
-
-    /* APPROACH */
-    .approach-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .approach-item {
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 24px;
-      padding: 40px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .approach-item:first-child { border-top: 1px solid var(--border); }
-    .approach-num {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: 64px;
-      font-weight: 800;
-      color: var(--text-dim);
-      line-height: 1;
-      letter-spacing: -0.05em;
-    }
-    .approach-body {}
-    .approach-title {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
-    .approach-desc {
-      font-size: 15px;
-      line-height: 1.65;
-      color: var(--text-muted);
-    }
-
-    /* FEATURES */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-    .feature-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-top: 2px solid rgba(var(--accent-rgb), 0.5);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-    }
-    .feature-title {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: 17px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-    .feature-desc {
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--text-muted);
-    }
-
-    /* NEXT STEPS */
-    .next-steps {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .next-step {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-      padding: 24px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .next-step:first-child { border-top: 1px solid var(--border); }
-    .step-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-top: 7px;
-      flex-shrink: 0;
-    }
-    .step-body {}
-    .step-title {
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-    .step-desc {
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--text-muted);
-    }
-
-    /* CTA */
-    .case-cta {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 24px 140px;
-      text-align: center;
-    }
-    .cta-heading {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: clamp(32px, 5vw, 56px);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      color: var(--text);
-      margin-bottom: 20px;
-    }
-    .cta-sub {
-      font-size: 16px;
-      color: var(--text-muted);
-      margin-bottom: 40px;
-    }
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 32px;
-      border-radius: 40px;
-      background: var(--accent);
-      color: #09090E;
-      font-size: 15px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: opacity 0.2s, transform 0.2s;
-      letter-spacing: -0.01em;
-    }
-    .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-    .cta-btn svg { width: 16px; height: 16px; }
-
-    /* SECTION DIVIDER */
-    .section-divider {
-      width: 100%;
-      height: 1px;
-      background: var(--border);
-      max-width: 900px;
-      margin: 0 auto 100px;
-    }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 28px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .footer-left {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-    .footer-left .c { color: var(--blue); }
-    .footer-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      font-size: 12px;
-      color: var(--text-dim);
-    }
-
-    /* REVEAL */
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible { opacity: 1; transform: none; }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Chapter nav */
-    .chapter-nav { position: sticky; top: 60px; z-index: 90; background: rgba(9,9,14,0.88); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); opacity: 0; transform: translateY(-4px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
-    .chapter-nav.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-    .chapter-nav-inner { display: flex; overflow-x: auto; scrollbar-width: none; max-width: 920px; margin: 0 auto; padding: 0 24px; }
-    .chapter-nav-inner::-webkit-scrollbar { display: none; }
-    .chapter-nav-item { display: flex; align-items: center; padding: 13px 14px; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--text-dim); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; position: relative; top: 1px; flex-shrink: 0; }
-    .chapter-nav-item:hover { color: var(--text-muted); }
-    .chapter-nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-    /* Next project */
-    .next-project { border-top: 1px solid var(--border); padding: 36px 40px; display: flex; align-items: center; justify-content: space-between; }
-    .next-project-label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); }
-    .next-project-link { display: inline-flex; align-items: center; gap: 10px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); text-decoration: none; transition: color 0.2s; }
-    .next-project-link:hover { color: var(--accent); }
-    .next-project-link svg { width: 18px; height: 18px; transition: transform 0.2s; }
-    .next-project-link:hover svg { transform: translateX(4px); }
-
-    @media (max-width: 700px) {
-      nav { padding: 0 20px; }
-      .challenge-grid { grid-template-columns: 1fr; }
-      .features-grid { grid-template-columns: 1fr; }
-      .approach-item { grid-template-columns: 56px 1fr; }
-      .approach-num { font-size: 44px; }
-      .next-project { padding: 28px 20px; }
-      footer { flex-direction: column; gap: 8px; text-align: center; }
-    }
+    /* Research eyebrow reuse */
+    .comparison-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; }
   </style>
 </head>
 <body>
@@ -500,11 +68,32 @@
   <!-- HERO -->
   <section class="case-hero">
     <div class="hero-tags">
-      <span class="tag accent">UX</span>
+      <span class="tag">Sport</span>
+      <span class="tag accent">UX Design</span>
+      <span class="tag">Web App</span>
+      <span class="tag coming-soon">Coming Soon</span>
     </div>
     <h1 class="hero-name">TAG <span>Running</span></h1>
     <p class="hero-subtitle">True Age Grading for the devoted runner.</p>
-    <p class="hero-intro">Standard age grading compares you to world records — an impossibly high bar that leaves most runners feeling like they're failing. TAG Running takes a different approach: benchmark yourself against your local Parkrun course records instead. Finally, a fair and honest read on where you actually stand.</p>
+    <p class="hero-intro">Standard age grading compares you to world records — an impossibly high bar that makes most recreational runners feel like they're permanently failing. TAG Running takes a different approach: benchmark yourself against your local Parkrun course records instead. A fairer, more honest read on where you actually stand.</p>
+    <div class="hero-meta">
+      <div>
+        <p class="hero-meta-label">Role</p>
+        <p class="hero-meta-value">UX & Product Designer</p>
+      </div>
+      <div>
+        <p class="hero-meta-label">Type</p>
+        <p class="hero-meta-value">Solo / Self-initiated</p>
+      </div>
+      <div>
+        <p class="hero-meta-label">Platform</p>
+        <p class="hero-meta-value">Web app</p>
+      </div>
+      <div>
+        <p class="hero-meta-label">Status</p>
+        <p class="hero-meta-value">Live</p>
+      </div>
+    </div>
     <div class="hero-divider"></div>
   </section>
 
@@ -513,30 +102,44 @@
     <img src="https://d4vidholly.github.io/Segflow/assets/tag-running-hero.png" alt="TAG Running interface" loading="lazy">
   </div>
 
-  <!-- CHALLENGES -->
+  <!-- CHALLENGE -->
   <section class="content-section" id="s-challenge">
     <p class="section-eyebrow reveal">The challenge</p>
     <h2 class="section-heading reveal">What wasn't working.</h2>
+    <p class="challenge-intro reveal">Before building anything, I looked at what already existed. The tools were there — but they were designed around the wrong people. Researching the existing age grading landscape made the problem immediately clear.</p>
+
+    <p class="comparison-eyebrow reveal">What already existed</p>
+    <div class="comparison-grid reveal">
+      <figure>
+        <img src="tag-assets/research1.png" alt="Existing age grading calculator — input form" loading="lazy">
+        <figcaption>Typical input form — no context, no visual hierarchy</figcaption>
+      </figure>
+      <figure>
+        <img src="tag-assets/research1result.png" alt="Existing age grading result — 25.64% against world records" loading="lazy">
+        <figcaption>The result: 25.64%. Compared to a world record. No context for what that means.</figcaption>
+      </figure>
+    </div>
+
     <div class="challenge-grid">
       <div class="challenge-card reveal reveal-delay-1">
         <p class="challenge-num">01</p>
-        <p class="challenge-title">World records as the benchmark</p>
-        <p class="challenge-desc">Traditional age grading tables compare runners to world-record pace. For recreational runners, this produces scores so low they feel meaningless — and discouraging.</p>
+        <p class="challenge-title">Limited visibility and usability</p>
+        <p class="challenge-desc">The tools that existed were hard to find, harder to read, and built without any consideration of user experience. Outdated HTML forms with no visual hierarchy — outputs that even a technically confident runner would struggle to interpret.</p>
       </div>
       <div class="challenge-card reveal reveal-delay-2">
         <p class="challenge-num">02</p>
-        <p class="challenge-title">No local context</p>
-        <p class="challenge-desc">Every Parkrun course is different. Hills, terrain, altitude — they all affect times. A runner on a hilly course was being judged against the same standard as someone on a flat one.</p>
+        <p class="challenge-title">Elite comparisons, recreational runners</p>
+        <p class="challenge-desc">Traditional age grading tables compare performance to world-record pace. For recreational Parkrun runners, this produces scores so low — often below 30% — that they feel meaningless. The tools were designed by and for competitive athletes, then handed to everyone else.</p>
       </div>
       <div class="challenge-card reveal reveal-delay-3">
         <p class="challenge-num">03</p>
-        <p class="challenge-title">Opaque scoring</p>
-        <p class="challenge-desc">Most grading tools give you a percentage with no explanation. Runners had no way to understand what the number meant, how to improve, or whether their progress was real.</p>
+        <p class="challenge-title">Course difficulty disconnect</p>
+        <p class="challenge-desc">Every Parkrun course is different. Hills, terrain, surface — they all affect finishing times significantly. Grading a runner on a hilly course against the same world-record standard as someone on a flat one produces a fundamentally unfair result.</p>
       </div>
       <div class="challenge-card reveal reveal-delay-4">
         <p class="challenge-num">04</p>
-        <p class="challenge-title">Scattered data</p>
-        <p class="challenge-desc">Course records lived on individual Parkrun pages. There was no tool that aggregated them into a single, usable reference for genuine local benchmarking.</p>
+        <p class="challenge-title">Opaque, unexplained scoring</p>
+        <p class="challenge-desc">A raw percentage with no context. Existing tools showed runners a number and stopped there. No plain-language explanation of what it meant, how it compared to others at their venue, or what they'd need to do to improve it.</p>
       </div>
     </div>
   </section>
@@ -544,36 +147,67 @@
   <!-- APPROACH -->
   <section class="content-section" id="s-approach">
     <p class="section-eyebrow reveal">The approach</p>
-    <h2 class="section-heading reveal">How I built it.</h2>
+    <h2 class="section-heading reveal">Four decisions that shaped it.</h2>
     <div class="approach-list">
+
       <div class="approach-item reveal">
         <p class="approach-num">1</p>
         <div class="approach-body">
-          <p class="approach-title">Redefine the benchmark</p>
-          <p class="approach-desc">Instead of world records, TAG uses each course's own age-category records as the reference point. Your 5K is graded against the best that's been run at your specific venue — a standard that's ambitious but real.</p>
+          <p class="approach-title">User discovery</p>
+          <p class="approach-desc">Before wireframing anything, I looked at who was actually searching for this kind of tool. Parkrun attracts recreational runners — people running on Saturday mornings for community and personal challenge, not competition. The data was revealing: women represent over 40% of Parkrun participants, but were almost entirely absent from age grading discussions and existing tool audiences. The tools had defaulted to "male first" in every input, every example, every result. That shaped a specific UX decision early.</p>
+          <div class="approach-visuals">
+            <figure>
+              <img src="tag-assets/research2.png" alt="WAVA age grading calculator — male-first default" loading="lazy">
+              <figcaption>Research — male-first defaults throughout</figcaption>
+            </figure>
+            <figure>
+              <img src="tag-assets/research3.png" alt="Older WAVA calculator interface" loading="lazy">
+              <figcaption>The oldest tools — functional but completely inaccessible</figcaption>
+            </figure>
+          </div>
+          <div class="decision-callout">
+            <p class="decision-callout-label">Design decision</p>
+            <p class="decision-callout-text">No default gender selection. Runners choose their category before the form submits — an intentional friction point that treats every user as equally likely, rather than treating one as the assumed case.</p>
+          </div>
         </div>
       </div>
+
       <div class="approach-item reveal reveal-delay-1">
         <p class="approach-num">2</p>
         <div class="approach-body">
-          <p class="approach-title">Course record aggregation</p>
-          <p class="approach-desc">Course records are scraped and maintained across UK Parkrun venues, giving the grading engine a live, local reference database rather than static global tables.</p>
+          <p class="approach-title">Visual storytelling</p>
+          <p class="approach-desc">Raw percentages are abstract. Adding 0.1% to your age grade is technically an improvement — but it doesn't feel like one. The decision was to translate the result into something visual: a dynamic progress chart that fills as your time approaches the course record. The end of the bar isn't an arbitrary benchmark — it's the fastest person your age has run that exact course. Someone real. Someone local.</p>
+          <div class="decision-callout">
+            <p class="decision-callout-label">Design decision</p>
+            <p class="decision-callout-text">The chart doesn't start at zero — it starts at a "reasonable recreational runner" baseline, so the bar feels meaningful from the first input rather than overwhelming. Seeing a bar at 60% full feels very different to reading "60%" in a table.</p>
+          </div>
         </div>
       </div>
+
       <div class="approach-item reveal reveal-delay-2">
         <p class="approach-num">3</p>
         <div class="approach-body">
-          <p class="approach-title">Clean, readable output</p>
-          <p class="approach-desc">The interface is built around a single clear result. Runners get a grade, a context sentence, and a visual — not a wall of numbers. The score means something because the benchmark means something.</p>
+          <p class="approach-title">Scoring over percentages</p>
+          <p class="approach-desc">Traditional grading gives you 42.73%. TAG gives you a score out of 1000. The same information, reframed. A higher integer grows more visibly than a decimal-point percentage — and with a ceiling at 1000 rather than 100%, there's more psychological headroom to improve. The scoring system borrows from gaming: the goal post moves, but it always feels reachable. Going from 412 to 438 in a month reads like progress. Going from 41.2% to 43.8% reads like rounding error.</p>
+          <div class="decision-callout">
+            <p class="decision-callout-label">Design decision</p>
+            <p class="decision-callout-text">The maximum is 1000, but displayed scores are rounded to the nearest integer — no decimals. This keeps the output clean and avoids false precision. A runner who improves by 3 seconds should see a meaningful jump in their score, not a 0.12% nudge.</p>
+          </div>
         </div>
       </div>
+
       <div class="approach-item reveal reveal-delay-3">
         <p class="approach-num">4</p>
         <div class="approach-body">
-          <p class="approach-title">No login, no friction</p>
-          <p class="approach-desc">Enter your time, your age, your course. That's it. TAG Running is deliberately low-friction — a tool you reach for on a Saturday morning without thinking, not a platform that demands your data first.</p>
+          <p class="approach-title">UI anchored in the ecosystem</p>
+          <p class="approach-desc">Parkrun's visual identity is red and green. TAG's colour system deliberately echoes it — not to mimic, but to anchor. Runners arriving from Parkrun should feel immediately at home. The typography is clean, the layout single-column, and the only bright accent on any result page is the progress bar. Everything else recedes so the number — and the sentence that explains it — can do the work.</p>
+          <div class="decision-callout">
+            <p class="decision-callout-label">Design decision</p>
+            <p class="decision-callout-text">Every result includes a single plain-language sentence — written as UX copy, not a tooltip. "You're running faster than 68% of people your age at this course." That sentence carries more weight than any number, and it required more careful writing than any component in the UI.</p>
+          </div>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -583,27 +217,27 @@
     <h2 class="section-heading reveal">Key features.</h2>
     <div class="features-grid">
       <div class="feature-card reveal reveal-delay-1">
-        <p class="feature-title">Local course benchmarking</p>
-        <p class="feature-desc">Grading against your specific Parkrun venue's age-category records — not global averages or world standards.</p>
+        <p class="feature-title">Course-specific benchmarking</p>
+        <p class="feature-desc">Your grade is calculated against records set at your specific Parkrun course by runners in your age category — not global tables, not world records. The benchmark is local and real.</p>
       </div>
       <div class="feature-card reveal reveal-delay-2">
-        <p class="feature-title">All age categories</p>
-        <p class="feature-desc">Full coverage across male and female age groups, from juniors through to seniors. Every runner gets a relevant grade.</p>
+        <p class="feature-title">Personal growth insights</p>
+        <p class="feature-desc">Run the same course twice and compare your TAG scores. The question isn't just where you are — it's where you're going. The tool is built around longitudinal improvement, not a one-time snapshot.</p>
       </div>
       <div class="feature-card reveal reveal-delay-3">
-        <p class="feature-title">Instant results</p>
-        <p class="feature-desc">No account, no login, no waiting. Input your run and get your grade in seconds — built for the post-run car park.</p>
+        <p class="feature-title">Visualised goal-setting</p>
+        <p class="feature-desc">The progress chart shows exactly how much time you'd need to drop to move your score meaningfully — translating abstract grading into a concrete target time. A goal you can train towards.</p>
       </div>
       <div class="feature-card reveal reveal-delay-4">
-        <p class="feature-title">Contextual scoring</p>
-        <p class="feature-desc">Your grade comes with a plain-language interpretation — so you always know what the number actually means in terms of your running.</p>
+        <p class="feature-title">UX writing built in</p>
+        <p class="feature-desc">Every result includes a plain-language interpretation — a sentence that turns a score into a story. Written to encourage rather than inform, because recreational runners need context, not data dumps.</p>
       </div>
     </div>
   </section>
 
   <div class="section-divider"></div>
 
-  <!-- NEXT STEPS -->
+  <!-- ROADMAP -->
   <section class="content-section" id="s-next">
     <p class="section-eyebrow reveal">What's next</p>
     <h2 class="section-heading reveal">On the roadmap.</h2>
@@ -611,22 +245,104 @@
       <div class="next-step reveal reveal-delay-1">
         <div class="step-dot"></div>
         <div class="step-body">
-          <p class="step-title">Personal history tracking</p>
-          <p class="step-desc">Save and compare grades across multiple runs to track genuine improvement over time — not just raw times, but graded performance.</p>
+          <p class="step-title">Data expansion</p>
+          <p class="step-desc">Extending course record coverage beyond the current UK dataset — more courses, more age categories, and handling edge cases like multi-terrain venues where the same course changes character between events.</p>
         </div>
       </div>
       <div class="next-step reveal reveal-delay-2">
         <div class="step-dot"></div>
         <div class="step-body">
-          <p class="step-title">Course comparison</p>
-          <p class="step-desc">Compare your graded performance across different venues — useful for runners who travel to events or run multiple weekly Parkruns.</p>
+          <p class="step-title">Training integration</p>
+          <p class="step-desc">Connecting your TAG score to actionable training guidance — if you're at 620 and want to hit 700, what weekly sessions would get you there? Bridging the gap between grading and coaching.</p>
         </div>
       </div>
       <div class="next-step reveal reveal-delay-3">
         <div class="step-dot"></div>
         <div class="step-body">
-          <p class="step-title">Volunteer & milestone recognition</p>
-          <p class="step-desc">Integrate with Parkrun's milestone system to surface relevant context about a runner's participation — not just their speed.</p>
+          <p class="step-title">Local club integration</p>
+          <p class="step-desc">Sharing grades within a running club context — a club leaderboard, collective improvement tracking, and milestone celebrations that make individual progress feel communal.</p>
         </div>
       </div>
-      <div class="next-step rev
+      <div class="next-step reveal reveal-delay-4">
+        <div class="step-dot"></div>
+        <div class="step-body">
+          <p class="step-title">Social comparison</p>
+          <p class="step-desc">Opt-in grade sharing — compare your progress with friends running different courses, different age categories. The same competitive instinct that drives Parkrun PB culture, applied to fair comparison.</p>
+        </div>
+      </div>
+      <div class="next-step reveal">
+        <div class="step-dot wip"></div>
+        <div class="step-body">
+          <p class="step-title">Edge case testing</p>
+          <p class="step-desc">Junior age grades, first-timers with no comparison baseline, courses with limited records — the grading logic needs to handle incomplete data gracefully and communicate uncertainty without undermining the result.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEXT PROJECT -->
+  <div class="next-project">
+    <p class="next-project-label">Next project</p>
+    <a href="moveclear-wembley.html" class="next-project-link">
+      Wembley
+      <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p class="footer-left">Move <span class="c">Clear</span></p>
+    <div class="footer-right">
+      <span>&copy; 2026 Move Clear Labs</span>
+      <a href="https://www.davidhollydesign.com" target="_blank" rel="noopener" class="footer-dhd-link"><img src="DHD_logo.png" alt="DHD" class="footer-dhd-logo"></a>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll state
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // Chapter nav
+    const chapterNav = document.getElementById('chapter-nav');
+    const chapterItems = document.querySelectorAll('.chapter-nav-item');
+    const chapterSections = document.querySelectorAll('[id^="s-"]');
+    const heroEl = document.querySelector('.case-hero');
+    if (heroEl) {
+      new IntersectionObserver(entries => {
+        chapterNav.classList.toggle('visible', !entries[0].isIntersecting);
+      }, { threshold: 0.05 }).observe(heroEl);
+    }
+    const chapterSpy = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          chapterItems.forEach(i => i.classList.remove('active'));
+          const active = document.querySelector(`.chapter-nav-item[href="#${entry.target.id}"]`);
+          if (active) {
+            active.classList.add('active');
+            const inner = active.closest('.chapter-nav-inner');
+            if (inner) inner.scrollTo({ left: active.offsetLeft - inner.offsetWidth / 2 + active.offsetWidth / 2, behavior: 'smooth' });
+          }
+        }
+      });
+    }, { threshold: 0.2, rootMargin: '-15% 0px -70% 0px' });
+    chapterSections.forEach(s => chapterSpy.observe(s));
+
+    // Scroll reveals
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    revealEls.forEach(el => revealObs.observe(el));
+  </script>
+</body>
+</html>

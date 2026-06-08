@@ -21,111 +21,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --accent: #34C759; --accent-rgb: 52,199,89; }
 
-    :root {
-      --bg:           #09090E;
-      --bg-card:      #0F0F16;
-      --text:         #EEEEF0;
-      --text-muted:   rgba(238,238,240,0.45);
-      --text-dim:     rgba(238,238,240,0.18);
-      --blue:         #5AC8FA;
-      --border:       rgba(238,238,240,0.07);
-      --radius:       14px;
-      --radius-lg:    20px;
-      --accent:       #34C759;
-      --accent-rgb:   52,199,89;
-    }
+    /* Wembley hero is larger than the shared default */
+    .hero-name { font-size: clamp(64px, 12vw, 140px); }
 
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Instrument Sans', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    /* Wembley uses 3-col opportunity grid */
+    .opportunity-list { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 860px) { .opportunity-list { grid-template-columns: repeat(2, 1fr); } }
 
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; transition: background 0.4s ease, border-color 0.4s ease; border-bottom: 1px solid transparent; }
-    nav.scrolled { background: rgba(9,9,14,0.85); border-color: var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-    .nav-back { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-muted); font-size: 13px; transition: color 0.2s, opacity 0.2s; }
-    .nav-back:hover { color: var(--text); opacity: 0.8; }
-    .nav-back svg { width: 14px; height: 14px; }
-    .nav-mc-logo { height: 16px; width: auto; display: block; }
-    .nav-cta { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 40px; border: 1px solid rgba(var(--accent-rgb), 0.35); color: var(--accent); font-size: 12px; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
-    .nav-cta:hover { background: rgba(var(--accent-rgb), 0.08); border-color: rgba(var(--accent-rgb), 0.6); }
-    .nav-cta svg { width: 12px; height: 12px; }
-
-    .case-hero { padding: 140px 24px 80px; max-width: 900px; margin: 0 auto; }
-    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
-    .tag { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 12px; border-radius: 40px; border: 1px solid var(--border); color: var(--text-muted); }
-    .tag.accent { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.3); background: rgba(var(--accent-rgb), 0.06); }
-    .hero-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(64px, 12vw, 140px); font-weight: 800; line-height: 0.92; letter-spacing: -0.04em; color: var(--text); opacity: 0; animation: fadeUp 0.9s ease 0.1s forwards; }
-    .hero-name span { color: var(--accent); }
-    .hero-subtitle { margin-top: 20px; font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(18px, 2.8vw, 28px); font-weight: 300; color: var(--text-muted); letter-spacing: -0.02em; opacity: 0; animation: fadeUp 0.9s ease 0.25s forwards; }
-    .hero-intro { margin-top: 28px; font-size: 17px; line-height: 1.65; color: var(--text-muted); max-width: 620px; opacity: 0; animation: fadeUp 0.9s ease 0.4s forwards; }
-    .hero-meta { display: flex; gap: 40px; flex-wrap: wrap; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); opacity: 0; animation: fadeUp 0.9s ease 0.55s forwards; }
-    .hero-meta-label { font-size: 10px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
-    .hero-meta-value { font-size: 14px; font-weight: 500; color: var(--text-muted); }
-    .hero-divider { margin-top: 64px; width: 100%; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0.25; }
-
-    .hero-image { max-width: 1080px; margin: 0 auto; padding: 0 24px 48px; }
-    .hero-image img { width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--border); display: block; }
-
-    .inline-image { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
-    .inline-image img { width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--border); display: block; }
-    .inline-image figcaption { margin-top: 12px; font-size: 12px; color: var(--text-dim); text-align: center; letter-spacing: 0.02em; }
-
-    .image-grid { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .image-grid figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-    .image-grid img { width: 100%; display: block; }
-    .image-grid figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
-
-    .content-section { max-width: 900px; margin: 0 auto; padding: 0 24px 100px; }
-    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; }
-    .section-heading { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--text); margin-bottom: 48px; }
-    .section-intro { font-size: 16px; line-height: 1.7; color: var(--text-muted); max-width: 640px; margin-bottom: 40px; margin-top: -24px; }
-
-    /* Decision callout */
-    .decision-callout { margin-top: 20px; padding: 18px 22px; background: rgba(var(--accent-rgb), 0.04); border: 1px solid rgba(var(--accent-rgb), 0.15); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; }
-    .decision-callout-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-    .decision-callout-text { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
-
-    /* Research quotes */
-    .research-quotes { margin-top: 40px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .research-quote { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid rgba(var(--accent-rgb), 0.4); border-radius: var(--radius); padding: 24px 28px; }
-    .research-quote-text { font-size: 14px; line-height: 1.65; color: var(--text-muted); font-style: italic; margin-bottom: 14px; }
-    .research-quote-text::before { content: '\201C'; }
-    .research-quote-text::after  { content: '\201D'; }
-    .research-quote-source { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
-    .research-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-top: 48px; margin-bottom: 20px; }
-
-    /* Discovery */
-    .discovery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .discovery-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; }
-    .discovery-icon { font-size: 22px; margin-bottom: 16px; }
-    .discovery-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
-    .discovery-desc { font-size: 14px; line-height: 1.65; color: var(--text-muted); }
-
-    /* Opportunity */
-    .opportunity-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .opportunity-item { padding: 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); position: relative; overflow: hidden; }
-    .opportunity-item::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0.35; }
-    .opportunity-icon { font-size: 20px; margin-bottom: 14px; }
-    .opportunity-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 8px; }
-    .opportunity-desc { font-size: 13px; line-height: 1.65; color: var(--text-muted); }
-
-    /* Approach */
-    .approach-list { display: flex; flex-direction: column; }
-    .approach-item { display: grid; grid-template-columns: 80px 1fr; gap: 24px; padding: 48px 0; border-bottom: 1px solid var(--border); }
-    .approach-item:first-child { border-top: 1px solid var(--border); }
-    .approach-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: 64px; font-weight: 800; color: var(--text-dim); line-height: 1; letter-spacing: -0.05em; }
-    .approach-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
-    .approach-desc { font-size: 15px; line-height: 1.65; color: var(--text-muted); }
-    .approach-visuals { margin-top: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .approach-visuals figure { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-    .approach-visuals img { width: 100%; display: block; }
-    .approach-visuals figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); letter-spacing: 0.02em; }
-    .approach-visual-full { margin-top: 12px; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-    .approach-visual-full img { width: 100%; display: block; }
-    .approach-visual-full figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); letter-spacing: 0.02em; }
-
-    /* Testing / Penalty */
+    /* Penalty / testing */
     .penalty-story { font-size: 15px; line-height: 1.7; color: var(--text-muted); margin-bottom: 40px; }
     .penalty-progression { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .penalty-step { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
@@ -133,10 +40,6 @@
     .penalty-step-caption { padding: 12px 16px; background: var(--bg-card); border-top: 1px solid var(--border); }
     .penalty-step-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
     .penalty-step-desc { font-size: 13px; line-height: 1.5; color: var(--text-muted); }
-
-    /* Subsection */
-    .subsection-label { font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-    .subsection-spacer { margin-top: 60px; }
 
     /* Cup Heroes */
     .heroes-intro { background: var(--bg-card); border: 1px solid var(--border); border-top: 2px solid rgba(var(--accent-rgb), 0.5); border-radius: var(--radius-lg); padding: 36px; margin-bottom: 16px; }
@@ -165,86 +68,12 @@
     .logo-pair img { width: 100%; display: block; aspect-ratio: 1; object-fit: cover; background: #1a1a1a; }
     .logo-pair figcaption { padding: 10px 14px; font-size: 12px; color: var(--text-dim); background: var(--bg-card); border-top: 1px solid var(--border); }
 
-    /* Quotes */
-    .quotes-list { display: flex; flex-direction: column; gap: 16px; }
-    .quote-block { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 28px 32px; }
-    .quote-text { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(17px, 2.2vw, 22px); font-weight: 300; line-height: 1.45; letter-spacing: -0.02em; color: var(--text); margin-bottom: 16px; }
-    .quote-text::before { content: '\201C'; }
-    .quote-text::after  { content: '\201D'; }
-    .quote-author { font-size: 12px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
-
-    /* Reflections */
-    .reflection-list { display: flex; flex-direction: column; }
-    .reflection-item { display: grid; grid-template-columns: 44px 1fr; gap: 20px; padding: 36px 0; border-bottom: 1px solid var(--border); }
-    .reflection-item:first-child { border-top: 1px solid var(--border); }
-    .reflection-marker { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: var(--text-dim); line-height: 1.3; }
-    .reflection-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 8px; }
-    .reflection-desc { font-size: 15px; line-height: 1.65; color: var(--text-muted); }
-
-    /* Next steps */
-    .next-steps { display: flex; flex-direction: column; }
-    .next-step { display: flex; gap: 20px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid var(--border); }
-    .next-step:first-child { border-top: 1px solid var(--border); }
-    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 7px; flex-shrink: 0; }
-    .step-dot.wip { background: rgba(var(--accent-rgb), 0.4); border: 1px solid var(--accent); }
-    .step-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-    .step-desc { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
-
-    .section-divider { width: 100%; height: 1px; background: var(--border); max-width: 900px; margin: 0 auto 100px; }
-
-    .case-cta { max-width: 900px; margin: 0 auto; padding: 0 24px 140px; text-align: center; }
-    .cta-heading { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(32px, 5vw, 56px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--text); margin-bottom: 20px; }
-    .cta-sub { font-size: 16px; color: var(--text-muted); margin-bottom: 40px; }
-    .cta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border-radius: 40px; background: var(--accent); color: #09090E; font-size: 15px; font-weight: 600; text-decoration: none; transition: opacity 0.2s, transform 0.2s; letter-spacing: -0.01em; }
-    .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-    .cta-btn svg { width: 16px; height: 16px; }
-
-    footer { border-top: 1px solid var(--border); padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; }
-    .footer-left { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.03em; }
-    .footer-left .c { color: var(--blue); }
-    .footer-right { display: flex; align-items: center; gap: 20px; font-size: 12px; color: var(--text-dim); letter-spacing: 0.02em; }
-
-    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    .reveal.visible { opacity: 1; transform: none; }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 860px) {
-      .opportunity-list { grid-template-columns: repeat(2, 1fr); }
-    }
-    /* Chapter nav */
-    .chapter-nav { position: sticky; top: 60px; z-index: 90; background: rgba(9,9,14,0.88); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); opacity: 0; transform: translateY(-4px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
-    .chapter-nav.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-    .chapter-nav-inner { display: flex; overflow-x: auto; scrollbar-width: none; max-width: 920px; margin: 0 auto; padding: 0 24px; }
-    .chapter-nav-inner::-webkit-scrollbar { display: none; }
-    .chapter-nav-item { display: flex; align-items: center; padding: 13px 14px; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--text-dim); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; position: relative; top: 1px; flex-shrink: 0; }
-    .chapter-nav-item:hover { color: var(--text-muted); }
-    .chapter-nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-    /* Next project */
-    .next-project { border-top: 1px solid var(--border); padding: 36px 40px; display: flex; align-items: center; justify-content: space-between; max-width: 100%; }
-    .next-project-label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); }
-    .next-project-link { display: inline-flex; align-items: center; gap: 10px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); text-decoration: none; transition: color 0.2s; }
-    .next-project-link:hover { color: var(--accent); }
-    .next-project-link svg { width: 18px; height: 18px; transition: transform 0.2s; }
-    .next-project-link:hover svg { transform: translateX(4px); }
+    /* Hero image — smaller and borderless for Wembley */
+    .hero-image { max-width: 506px; }
+    .hero-image img { border: none; border-radius: 0; }
 
     @media (max-width: 700px) {
-      nav { padding: 0 20px; }
-      .discovery-grid, .research-quotes, .opportunity-list, .approach-visuals,
-      .penalty-progression, .heroes-mechanics, .skins-grid, .logo-pair, .image-grid { grid-template-columns: 1fr; }
-      .approach-item { grid-template-columns: 56px 1fr; }
-      .approach-num { font-size: 44px; }
-      .reflection-item { grid-template-columns: 32px 1fr; }
-      .next-project { padding: 28px 20px; }
-      footer { flex-direction: column; gap: 8px; text-align: center; }
+      .penalty-progression, .heroes-mechanics, .skins-grid, .logo-pair { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -269,7 +98,7 @@
       <svg viewBox="0 0 14 14" fill="none"><path d="M13 7H1M7 13l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <img src="moveclear_logo.png" alt="Move Clear" class="nav-mc-logo">
     </a>
-    <a href="https://d4vidholly.github.io/Wembley/" target="_blank" rel="noopener" class="nav-cta">
+    <a href="https://d4vidholly.github.io/wembley-game/" target="_blank" rel="noopener" class="nav-cta">
       Play Wembley
       <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
@@ -278,12 +107,19 @@
   <!-- HERO -->
   <section class="case-hero">
     <div class="hero-tags">
-      <span class="tag accent">Front End</span>
+      <span class="tag">Games</span>
+      <span class="tag accent">UX Design</span>
+      <span class="tag">Web App</span>
+      <span class="tag live">Live</span>
     </div>
     <h1 class="hero-name"><span>Wembley</span></h1>
-    <p class="hero-subtitle">Bringing the Game to Life</p>
-    <p class="hero-intro">The Wembley board game has been on kitchen tables since the 1970s. Playing it again as an adult — and then finding forums full of people asking for dice probabilities, rules half-remembered, ways to keep playing when the box was broken — made the problem clear. This is its digital companion: faithful to the original mechanics, freed from the box, and built from scratch by one person across design, product, and code.</p>
-    <div class="hero-meta">
+    <p class="hero-subtitle">Bringing Digital Magic to the Cup</p>
+<p class="hero-intro">The Wembley board game has been on kitchen tables since the 1950s.
+
+Playing it again as an adult, experiencing slow game play and finding forums full of people asking for dice probabilities, rules half-remembered, ways to keep playing when the box was outdated gave an opportunity.
+
+<br><br>
+This is its digital companion: building on the original mechanics, delivering strategy and realism while evoking memories of the world's oldest competition.</p>    <div class="hero-meta">
       <div>
         <p class="hero-meta-label">Role</p>
         <p class="hero-meta-value">Full Stack Product Designer</p>
@@ -587,7 +423,7 @@
           <figcaption>Later Gibsons edition — the design reference</figcaption>
         </figure>
         <figure>
-          <img src="new_logo.png" alt="Redesigned Wembley logo" loading="lazy" style="object-fit:contain;background:#1a3a1a;">
+          <img src="wembley-assets/wembley_logo.png" alt="Redesigned Wembley logo" loading="lazy" style="object-fit:contain;background:#1a3a1a;">
           <figcaption>Redesign — heritage brought forward for web</figcaption>
         </figure>
       </div>
@@ -613,6 +449,10 @@
       <div class="quote-block reveal reveal-delay-3">
         <p class="quote-text">We used to play this on Christmas Day. Now we can again, even without the box.</p>
         <p class="quote-author">Player — family user, nostalgic</p>
+      </div>
+      <div class="quote-block reveal reveal-delay-4">
+        <p class="quote-text">The ticker tape in the final is a very nice touch. I loved the penalty shootout — on my version it's replays, but this is much better. I would probably delay the timing of the pens a little to add drama.</p>
+        <p class="quote-author">Gary — BoardGameGeek user</p>
       </div>
     </div>
   </section>
@@ -643,6 +483,13 @@
           <p class="reflection-desc">The Cup Heroes UI evolved significantly through the build — slot logic, how players are selected, how effects are communicated. Simplifying that system earlier in the process would have made it faster to iterate on. The final version is cleaner, but getting there took longer than it needed to.</p>
         </div>
       </div>
+      <div class="reflection-item reveal reveal-delay-3">
+        <p class="reflection-marker">↩</p>
+        <div>
+          <p class="reflection-title">Named players vs. generic stars</p>
+          <p class="reflection-desc">The decision to give Cup Heroes real names — Dave Beasant, Steven Gerrard, Ashley Cole — was deliberate: personality, discovery, and real Wembley history baked into the selection. Early feedback validated it. But a user from BoardGameGeek raised the flip side: selecting the same named players for different clubs felt odd. Their preference was for generic "unnamed stars" — the token approach of the original board game. This is a genuine design tension between personality and immersion, and it's worth offering both. A future toggle between named and unnamed mode would resolve it cleanly without abandoning either approach.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -668,8 +515,15 @@
       <div class="next-step reveal reveal-delay-3">
         <div class="step-dot wip"></div>
         <div>
+          <p class="step-title">Edition-aware team management</p>
+          <p class="step-desc">The Wembley board game has been through multiple editions, each with a different team set. The current app is built around the 2016 Gibsons edition — which means players with earlier or later versions will find teams missing or wrong. The fix isn't adding more hardcoded lists: it's letting users select their edition, or customise the team roster entirely. First feedback from the BGG community confirmed this as the top functional gap.</p>
+        </div>
+      </div>
+      <div class="next-step reveal reveal-delay-4">
+        <div class="step-dot wip"></div>
+        <div>
           <p class="step-title">Board Game Geek community</p>
-          <p class="step-desc">Wembley ranks 16,927 on BGG with a 6.1 rating — niche, but with a committed fanbase who have been asking for digital versions for years. Currently posting to the BGG forum to gather feedback from the core audience the app was built for.</p>
+          <p class="step-desc">Wembley ranks 16,927 on BGG with a 6.1 rating — niche, but with a committed fanbase who have been asking for digital versions for years. Early posts to the BGG forum are already generating feedback from the core audience the app was built for.</p>
         </div>
       </div>
       <div class="next-step reveal reveal-delay-4">
@@ -704,6 +558,7 @@
     <span class="footer-left">Move<span class="c">Clear</span></span>
     <span class="footer-right">
       <span>&copy; 2026 Move Clear Labs</span>
+      <a href="https://www.davidhollydesign.com" target="_blank" rel="noopener" class="footer-dhd-link"><img src="DHD_logo.png" alt="DHD" class="footer-dhd-logo"></a>
     </span>
   </footer>
 
